@@ -1,0 +1,42 @@
+.root {
+    -fx-background-color: #808080;
+    color: whitesmoke;
+
+}
+
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.invalidInput {
+    -fx-background-color: #F0B9B9;
+}
+
+#menu {
+    -fx-background-color: #454545;
+}
+
+#downloadButton {
+
+    -fx-font-size: 15px;
+    -fx-padding: 10 20 10 20;
+}
+
+#separator .line {
+    -fx-border-color: #636363;
+    -fx-border-width: 0.083333em;
+}
+
+#separator {
+    -fx-padding: 10 15 10 15;
+    -fx-color: #636363;
+}
+
+#welcome-text {
+    -fx-font-size: 26px;
+    -fx-font-family: "Arial Black";
+    -fx-fill: white;
+}
+
