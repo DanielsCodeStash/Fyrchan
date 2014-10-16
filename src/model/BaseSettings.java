@@ -18,7 +18,7 @@ public class BaseSettings
     public static int maxFileSize = 6 * 1000 * 1000;
 
     public static int maxCharsInThreadTitleName = 20;
-    public static String exampleThreadId = "52353";
+    public static String exampleThreadId = "52354";
     public static String exampleThreadName = "hotwheels_naked";
 
 
