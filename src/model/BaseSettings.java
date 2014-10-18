@@ -19,7 +19,7 @@ public class BaseSettings
 
     public static int maxCharsInThreadTitleName = 20;
     public static String exampleThreadId = "523546";
-    public static String exampleThreadName = "hotwheels_naked";
+    public static String exampleThreadName = "hotwheels_not_naked";
 
 
     private static String getBaseOutDir()
