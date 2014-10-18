@@ -1,6 +1,6 @@
 package shared;
 
-public class JobInfo
+public class JobDescription
 {
     private String threadUrl;
     private String path;
@@ -11,7 +11,7 @@ public class JobInfo
         return threadUrl;
     }
 
-    public JobInfo setThreadUrl(String threadUrl)
+    public JobDescription setThreadUrl(String threadUrl)
     {
         this.threadUrl = threadUrl;
         return this;
@@ -23,7 +23,7 @@ public class JobInfo
         return path;
     }
 
-    public JobInfo setPath(String path)
+    public JobDescription setPath(String path)
     {
         this.path = path;
         return this;
@@ -32,7 +32,7 @@ public class JobInfo
     @Override
     public String toString()
     {
-        return "JobInfo{" +
+        return "JobDescription{" +
                 "threadUrl='" + threadUrl + '\'' +
                 ", path='" + path + '\'' +
                 '}';

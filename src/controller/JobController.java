@@ -5,7 +5,7 @@ import javafx.stage.DirectoryChooser;
 import model.BaseSettings;
 import model.DownerModel;
 import model.parsing.PathHandler;
-import shared.JobInfo;
+import shared.JobDescription;
 import shared.JobStats;
 import shared.JobStatus;
 import view.JobPanel;
@@ -109,14 +109,14 @@ public class JobController
         return getPath() + "1.png";
     }
 
-    public JobInfo getJobData()
+    public JobDescription getJobData()
     {
-        JobInfo jobInfo = new JobInfo()
+        JobDescription jobDescription = new JobDescription()
                 .setPath(getPath())
                 .setThreadUrl(jobPanel.getThreadUrl().getText());
 
-        System.out.println(jobInfo);
-        return jobInfo;
+        System.out.println(jobDescription);
+        return jobDescription;
     }
 
     public void onThreadUrlKeyUp()

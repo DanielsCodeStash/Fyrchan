@@ -2,7 +2,7 @@ package model.downloading;
 
 import model.DownerModel;
 import model.StatsHandler;
-import shared.JobInfo;
+import shared.JobDescription;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,11 +21,11 @@ public class JobRunner
 
     }
 
-    public void startDownloads(JobInfo jobInfo)
+    public void startDownloads(JobDescription jobDescription)
     {
         jobRunning.set(true);
         statsHandler = new StatsHandler(downerModel);
-        ThreadDowner threadDowner = new ThreadDowner(jobInfo, statsHandler, this::onDownloadDone, jobRunning);
+        ThreadDowner threadDowner = new ThreadDowner(jobDescription, statsHandler, this::onDownloadDone, jobRunning);
         new Thread(threadDowner).start();
 
         System.out.println("Thread download started");

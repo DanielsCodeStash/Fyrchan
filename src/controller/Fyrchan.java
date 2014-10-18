@@ -1,32 +1,35 @@
 package controller;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.DownerModel;
-import view.JobListPanel;
+import view.joblist.JobListPanel;
 import view.JobPanel;
 import view.StatsPanel;
 
 public class Fyrchan extends Application
 {
 
+    // panels
     private JobPanel jobPanel;
-    private JobController jobController;
     private StatsPanel statsPanel;
+    private JobListPanel jobListPanel;
+
+    // controllers
+    private JobController jobController;
+    private JobListController jobListController;
+
+    // model
     private DownerModel downerModel;
 
-    private VBox mainPanel;
-
+    // main structure blocks
     private Scene primaryScene;
     private Stage primaryStage;
 
@@ -41,16 +44,21 @@ public class Fyrchan extends Application
     {
         // initiate the applications model, view and controller
         downerModel = new DownerModel();
+
         jobPanel = new JobPanel(downerModel);
         statsPanel = new StatsPanel(downerModel);
-        jobController = new JobController(jobPanel, downerModel, this);
+        jobListPanel = new JobListPanel(downerModel);
 
-        BorderPane mainPane = new BorderPane();
+        jobController = new JobController(jobPanel, downerModel, this);
+        jobListController = new JobListController(jobListPanel, downerModel, this);
 
 
         // initiate main gui-parts
+        BorderPane mainPane = new BorderPane();
+        VBox upperContainer = new VBox();
+        BorderPane lowerContainer = new BorderPane();
+
         this.primaryStage = primaryStage;
-        mainPanel = new VBox();
         primaryScene = new Scene(mainPane);
 
         // set scene and stage options
@@ -58,25 +66,19 @@ public class Fyrchan extends Application
         setStageOptions(primaryStage, primaryScene);
 
         // app sub-panels to our main panel
-        mainPanel.getChildren().add(getMenuBar());
-        mainPanel.getChildren().add(jobPanel.getJobGrid());
-        mainPanel.getChildren().add(getSeparator());
-        //mainPanel.getChildren().add(statsPanel.getStatsGrid());
+        upperContainer.getChildren().add(getMenuBar());
+        upperContainer.getChildren().add(jobPanel.getJobGrid());
+        upperContainer.getChildren().add(getSeparator());
 
-        BorderPane pane = new BorderPane();
-        pane.setId("ttest");
-        pane.setLeft(statsPanel.getStatsGrid());
-        pane.setRight(JobListPanel.testListView());
-        pane.setMaxHeight(2000);
+        lowerContainer.setLeft(statsPanel.getStatsGrid());
+        lowerContainer.setRight(jobListPanel.getListContainer());
+        lowerContainer.setMaxHeight(2000);
 
-        mainPanel.getChildren().add(pane);
+        mainPane.setTop(upperContainer);
+        mainPane.setCenter(lowerContainer);
 
-        mainPane.setTop(mainPanel);
-        mainPane.setCenter(pane);
-
-        primaryStage.setOnShown(windowEvent -> {
-            jobController.onStageShown();
-        });
+        // set up alerts for controllers that needs to know when the stage has been rendered
+        primaryStage.setOnShown(windowEvent -> jobController.onStageShown());
 
         // show everything
         primaryStage.show();

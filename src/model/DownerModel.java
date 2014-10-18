@@ -1,7 +1,7 @@
 package model;
 
 import model.downloading.JobRunner;
-import shared.JobInfo;
+import shared.JobDescription;
 import shared.JobStats;
 import util.observable.CoolObservable;
 import util.observable.CoolObserver;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class DownerModel
 {
-    private JobInfo activeJobInfo = null;
+    private JobDescription activeJobDescription = null;
     private JobStats activeJobStats = null;
     private JobRunner activeJobRunner = null;
 
@@ -23,20 +23,20 @@ public class DownerModel
         activeJobStatusObservable = new CoolObservable<>();
     }
 
-    public synchronized void startNewJob(JobInfo jobInfo)
+    public synchronized void startNewJob(JobDescription jobDescription)
     {
-        if (urlToJobRunner.containsKey(jobInfo.getThreadUrl()))
+        if (urlToJobRunner.containsKey(jobDescription.getThreadUrl()))
         {
-            activeJobRunner = urlToJobRunner.get(jobInfo.getThreadUrl());
+            activeJobRunner = urlToJobRunner.get(jobDescription.getThreadUrl());
         }
         else
         {
             activeJobRunner = new JobRunner(this);
-            urlToJobRunner.put(jobInfo.getThreadUrl(), activeJobRunner);
+            urlToJobRunner.put(jobDescription.getThreadUrl(), activeJobRunner);
         }
 
-        activeJobInfo = jobInfo;
-        activeJobRunner.startDownloads(jobInfo);
+        activeJobDescription = jobDescription;
+        activeJobRunner.startDownloads(jobDescription);
     }
 
     public void onActiveJobStatsChange(CoolObserver<JobStats> obs)

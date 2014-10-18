@@ -4,7 +4,7 @@ import model.BaseSettings;
 import model.StatsHandler;
 import model.parsing.ThreadParser;
 import org.jsoup.nodes.Document;
-import shared.JobInfo;
+import shared.JobDescription;
 import util.ConHandler;
 import util.CoolThreadPool;
 import util.Funtastic;
@@ -18,15 +18,15 @@ public class ThreadDowner implements Runnable
 
 {
 
-    private JobInfo jobInfo;
+    private JobDescription jobDescription;
     private StatsHandler statsHandler;
     private Funtastic onDownloadDone;
     private AtomicBoolean downloadRunning;
 
 
-    public ThreadDowner(JobInfo jobInfo, StatsHandler statsHandler, Funtastic onDownloadDone, AtomicBoolean downloadRunning)
+    public ThreadDowner(JobDescription jobDescription, StatsHandler statsHandler, Funtastic onDownloadDone, AtomicBoolean downloadRunning)
     {
-        this.jobInfo = jobInfo;
+        this.jobDescription = jobDescription;
         this.statsHandler = statsHandler;
         this.onDownloadDone = onDownloadDone;
         this.downloadRunning = downloadRunning;
@@ -36,7 +36,7 @@ public class ThreadDowner implements Runnable
     private void download() throws IOException, InterruptedException
     {
 
-        Document threadDocument = ConHandler.getConnection(jobInfo.getThreadUrl()).get();
+        Document threadDocument = ConHandler.getConnection(jobDescription.getThreadUrl()).get();
         ArrayList<String> fileUrls = ThreadParser.getFileUrls(threadDocument);
 
         if (fileUrls.isEmpty())
@@ -46,7 +46,7 @@ public class ThreadDowner implements Runnable
         }
         else
         {
-            File dir = new File(jobInfo.getPath());
+            File dir = new File(jobDescription.getPath());
             if (!dir.isDirectory())
             {
                 boolean res = dir.mkdirs();
@@ -72,7 +72,7 @@ public class ThreadDowner implements Runnable
         for (int i = 0; i < fileUrls.size(); i++)
         {
             String fileUrl = fileUrls.get(i);
-            String outputPath = getOutFilePath(fileUrl, jobInfo.getPath(), i);
+            String outputPath = getOutFilePath(fileUrl, jobDescription.getPath(), i);
 
             SingleFileDowner imgDowner = new SingleFileDowner(fileUrl, outputPath, statsHandler, downloadRunning);
             service.addTask(imgDowner);

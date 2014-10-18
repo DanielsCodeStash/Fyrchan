@@ -1,4 +1,4 @@
-package view;
+package view.joblist;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;

@@ -4,25 +4,11 @@
 
 }
 
-#jobStatsPanel
-{
-
-}
-
 #JobListPanel
 {
     -fx-padding: 10 20 10 0;
 }
 
-
-#JobListPanel
-{
-
-}
-
-#ttest
-{
-}
 
 .label {
     -fx-font-size: 12px;
