@@ -36,13 +36,14 @@ public class JobController
         jobPanel.getRunButton().setOnAction(actionEvent -> startDownload());
 
         downerModel.onActiveJobStatsChange(this::onJobStatsUpdate);
-        onStart();
     }
 
-    public void onStart()
+    public void onStageShown()
     {
         jobPanel.getPreview().setText(getPreviewPath());
+        jobPanel.getAutoUpdateCheckbox().setSelected(true);
     }
+
 
 
     public void onJobStatsUpdate(JobStats jobStats)

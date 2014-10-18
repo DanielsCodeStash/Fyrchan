@@ -1,14 +1,19 @@
 package controller;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.DownerModel;
+import view.JobListPanel;
 import view.JobPanel;
 import view.StatsPanel;
 
@@ -40,11 +45,13 @@ public class Fyrchan extends Application
         statsPanel = new StatsPanel(downerModel);
         jobController = new JobController(jobPanel, downerModel, this);
 
+        BorderPane mainPane = new BorderPane();
+
 
         // initiate main gui-parts
         this.primaryStage = primaryStage;
         mainPanel = new VBox();
-        primaryScene = new Scene(mainPanel);
+        primaryScene = new Scene(mainPane);
 
         // set scene and stage options
         setSceneOptions(primaryScene);
@@ -54,11 +61,26 @@ public class Fyrchan extends Application
         mainPanel.getChildren().add(getMenuBar());
         mainPanel.getChildren().add(jobPanel.getJobGrid());
         mainPanel.getChildren().add(getSeparator());
-        mainPanel.getChildren().add(statsPanel.getStatsGrid());
+        //mainPanel.getChildren().add(statsPanel.getStatsGrid());
 
+        BorderPane pane = new BorderPane();
+        pane.setId("ttest");
+        pane.setLeft(statsPanel.getStatsGrid());
+        pane.setRight(JobListPanel.testListView());
+        pane.setMaxHeight(2000);
+
+        mainPanel.getChildren().add(pane);
+
+        mainPane.setTop(mainPanel);
+        mainPane.setCenter(pane);
+
+        primaryStage.setOnShown(windowEvent -> {
+            jobController.onStageShown();
+        });
 
         // show everything
         primaryStage.show();
+
 
     }
 

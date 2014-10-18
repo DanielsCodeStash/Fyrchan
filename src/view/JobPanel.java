@@ -2,11 +2,11 @@ package view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.BaseSettings;
 import model.DownerModel;
@@ -26,6 +26,7 @@ public class JobPanel
 
     private GridPane jobGrid;
     private DownerModel downerModel;
+    private CheckBox autoUpdateCheckbox;
 
 
     public JobPanel(DownerModel downerModel)
@@ -90,11 +91,28 @@ public class JobPanel
         grid.add(preview, 1, 4);
 
 
+        HBox actionContainer = new HBox();
+        actionContainer.setAlignment(Pos.BOTTOM_LEFT);
+
         // start button
         runButton = new Button();
         runButton.setId("downloadButton");
         setNewJobStatus(JobStatus.NOT_STARTED);
-        grid.add(runButton, 1, 5);
+        actionContainer.getChildren().add(runButton);
+
+
+        // auto update checkbox, style in css is ignored
+        autoUpdateCheckbox = new CheckBox();
+        autoUpdateCheckbox.setPadding(new Insets(0, 0, 30, 30));
+        autoUpdateCheckbox.setFont(Font.font(19));
+        actionContainer.getChildren().add(autoUpdateCheckbox);
+
+        Label la = new Label("Auto Update");
+        la.setPadding(new Insets(0, 0, 0, -2));
+        la.setFont(Font.font(18));
+        actionContainer.getChildren().add(la);
+
+        grid.add(actionContainer, 1, 5);
 
         return grid;
     }
@@ -163,5 +181,10 @@ public class JobPanel
     public Button getSelectDirButton()
     {
         return selectDirButton;
+    }
+
+    public CheckBox getAutoUpdateCheckbox()
+    {
+        return autoUpdateCheckbox;
     }
 }

@@ -48,7 +48,8 @@ public class StatsPanel
         grid.getColumnConstraints().add(new ColumnConstraints(100));
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(15, 15, 50, 15));
+        grid.setPadding(new Insets(0, 15, 50, 15));
+        grid.setId("jobStatsPanel");
 
 
         Label statusLabel = new Label("Status:");

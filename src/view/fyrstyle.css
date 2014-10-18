@@ -4,10 +4,88 @@
 
 }
 
+#jobStatsPanel
+{
+
+}
+
+#JobListPanel
+{
+    -fx-padding: 10 20 10 0;
+}
+
+
+#JobListPanel
+{
+
+}
+
+#ttest
+{
+}
+
 .label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
+}
+
+.list-view .label
+{
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+}
+
+
+
+.progress-bar {
+    -fx-indeterminate-bar-length: 60;
+    -fx-indeterminate-bar-escape: true;
+    -fx-indeterminate-bar-flip: true;
+    -fx-indeterminate-bar-animation-time: 2;
+}
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );
+    -fx-background-insets: 3 3 4 3;
+    -fx-background-radius: 2;
+    -fx-padding: 0.75em;
+}
+.progress-bar:indeterminate > .bar {
+    -fx-background-color: linear-gradient(to left, transparent, -fx-accent);
+}
+.progress-bar > .track {
+    -fx-background-color: #C9C9C9;
+    -fx-background-insets: 0, 0 0 1 0, 1 1 2 1;
+    -fx-background-radius: 4, 3, 2;
+}
+
+
+
+.indexed-cell:odd
+{
+    -fx-background-color: #C9C9C9;
+}
+
+
+
+.indexed-cell:even
+{
+    -fx-background-color: #DBDBDB;
+}
+
+.cell:hover
+{
+    -fx-background-color: #ADADAD;
+}
+
+.cell
+{
+    -fx-background-radius: 4, 3, 2;
+}
+
+.indexed-cell:selected
+{
+    -fx-background-color: #90CCD4;
 }
 
 .invalidInput {
@@ -40,3 +118,11 @@
     -fx-fill: white;
 }
 
+
+.list-view
+{
+    -fx-background-insets: 1;
+    -fx-focus-color: #808080;
+    -fx-background-color: #C9C9C9;
+    -fx-background-radius: 4, 3, 2;
+}
