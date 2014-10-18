@@ -53,19 +53,12 @@ public class Fyrchan extends Application
         jobListController = new JobListController(jobListPanel, downerModel, this);
 
 
-        // initiate main gui-parts
+        // initiate main containers
         BorderPane mainPane = new BorderPane();
         VBox upperContainer = new VBox();
         BorderPane lowerContainer = new BorderPane();
 
-        this.primaryStage = primaryStage;
-        primaryScene = new Scene(mainPane);
-
-        // set scene and stage options
-        setSceneOptions(primaryScene);
-        setStageOptions(primaryStage, primaryScene);
-
-        // app sub-panels to our main panel
+        // add leaf-panels to our main containers
         upperContainer.getChildren().add(getMenuBar());
         upperContainer.getChildren().add(jobPanel.getJobGrid());
         upperContainer.getChildren().add(getSeparator());
@@ -76,6 +69,12 @@ public class Fyrchan extends Application
 
         mainPane.setTop(upperContainer);
         mainPane.setCenter(lowerContainer);
+
+        // set scene and stage options
+        this.primaryStage = primaryStage;
+        primaryScene = new Scene(mainPane);
+        setSceneOptions(primaryScene);
+        setStageOptions(primaryStage, primaryScene);
 
         // set up alerts for controllers that needs to know when the stage has been rendered
         primaryStage.setOnShown(windowEvent -> jobController.onStageShown());

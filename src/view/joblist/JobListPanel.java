@@ -9,6 +9,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
 import model.DownerModel;
 import shared.JobListItem;
+import util.observable.CoolObservable;
+import util.observable.CoolObserver;
 
 public class JobListPanel
 {
@@ -16,7 +18,8 @@ public class JobListPanel
     private DownerModel downerModel;
 
     private VBox listContainer;
-    private ObservableList<JobListItem> items;
+    private ObservableList<JobListItem> items = FXCollections.observableArrayList();
+    private CoolObservable<JobListItem> removeButtonObservable = new CoolObservable<>();
 
     public JobListPanel(DownerModel downerModel)
     {
@@ -29,7 +32,6 @@ public class JobListPanel
     {
         // list config
         ListView<JobListItem> listView = new ListView<>();
-        items = FXCollections.observableArrayList();
         listView.setItems(items);
         listView.setCellFactory(stringListView -> new JobItemCell());
 
@@ -57,8 +59,9 @@ public class JobListPanel
         return listContainer;
     }
 
-    static class JobItemCell extends ListCell<JobListItem>
+    private class JobItemCell extends ListCell<JobListItem>
     {
+
 
         @Override
         public void updateItem(JobListItem item, boolean empty)
@@ -76,7 +79,7 @@ public class JobListPanel
             Label status = new Label("Status   ");
             StupidImageButton stupidButton = new StupidImageButton();
 
-            stupidButton.setOnClick(() -> System.out.println("h?"));
+            stupidButton.setOnClick(() -> removeButtonObservable.notifyObservers(item));
 
             // set up structure
             rightContainer.getChildren().add(status);
@@ -87,6 +90,11 @@ public class JobListPanel
             setGraphic(mainPane);
 
         }
+    }
+
+    public void onRemoveButtonClicked(CoolObserver<JobListItem> obs)
+    {
+        removeButtonObservable.addObserver(obs);
     }
 
     public VBox getListContainer()

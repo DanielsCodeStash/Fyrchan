@@ -1,6 +1,7 @@
 package controller;
 
 import model.DownerModel;
+import shared.JobListItem;
 import view.joblist.JobListPanel;
 
 
@@ -15,6 +16,13 @@ public class JobListController
         this.jobListPanel = jobListPanel;
         this.downerModel = downerModel;
         this.fyrchan = fyrchan;
+
+        jobListPanel.onRemoveButtonClicked(this::removeButtonClicked);
+    }
+
+    private void removeButtonClicked(JobListItem item)
+    {
+        System.out.println("HEJ! " + item.getDescription());
     }
 
 }
