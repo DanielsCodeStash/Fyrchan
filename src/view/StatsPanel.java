@@ -45,7 +45,7 @@ public class StatsPanel
     private GridPane constructStatsGrid()
     {
         GridPane grid = new GridPane();
-        grid.getColumnConstraints().add(new ColumnConstraints(100));
+        grid.getColumnConstraints().add(new ColumnConstraints(120));
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(0, 15, 50, 15));

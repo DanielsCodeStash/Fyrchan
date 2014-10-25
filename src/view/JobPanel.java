@@ -39,20 +39,21 @@ public class JobPanel
     private GridPane constructJobGrid()
     {
         GridPane grid = new GridPane();
+        //grid.setGridLinesVisible(true);
         grid.setAlignment(Pos.TOP_LEFT);
 
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(15, 15, 15, 15));
-        grid.setPrefWidth(750);
+        grid.setPrefWidth(800);
 
         // column settings
-        grid.getColumnConstraints().add(new ColumnConstraints(100)); // col 1
+        grid.getColumnConstraints().add(new ColumnConstraints(120)); // col 1
         ColumnConstraints constraints = new ColumnConstraints(); // col 2
         constraints.setPrefWidth(600);
         grid.getColumnConstraints().add(constraints);
         ColumnConstraints c = new ColumnConstraints(); // col 3
-        c.setMinWidth(50);
+        c.setMinWidth(70);
         grid.getColumnConstraints().add(c);
 
         // tile
@@ -73,6 +74,7 @@ public class JobPanel
         threadName.setText(BaseSettings.baseFolderFormat);
         grid.add(threadName, 1, 2);
         resetButton = new Button("Reset");
+        resetButton.setMaxWidth(100);
         grid.add(resetButton, 2, 2);
 
         // base path
@@ -82,6 +84,7 @@ public class JobPanel
         basePath.setText(BaseSettings.baseOutDir);
         grid.add(basePath, 1, 3);
         selectDirButton = new Button("Select");
+        selectDirButton.setMaxWidth(100);
         grid.add(selectDirButton, 2, 3);
 
         // path preview

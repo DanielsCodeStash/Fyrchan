@@ -22,7 +22,7 @@ public class JobListController
 
     private void removeButtonClicked(JobListItem item)
     {
-        System.out.println("HEJ! " + item.getDescription());
+        downerModel.removeAutoUpdateItem(item);
     }
 
 }

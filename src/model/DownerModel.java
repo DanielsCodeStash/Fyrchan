@@ -21,9 +21,47 @@ public class DownerModel
 
     private HashMap<String, JobRunner> urlToJobRunner = new HashMap<>();
 
+    private ArrayList<JobListItem> items = new ArrayList<>();
 
+    static int tes = 0;
     public synchronized void startNewJob(JobDescription jobDescription)
     {
+        if(tes == 0)
+        {
+            items.add(new JobListItem()
+                .setDescription(jobDescription.getThreadUrl().substring(0, 20))
+                .setStatus("404"));
+        }
+        else if(tes == 1)
+        {
+            items.add(new JobListItem()
+                    .setDescription(jobDescription.getThreadUrl().substring(0, 20))
+                    .setStatus("505"));
+
+            items.add(new JobListItem()
+                    .setDescription(jobDescription.getThreadUrl().substring(0, 20))
+                    .setStatus("505"));
+        }
+        else if(tes == 2)
+        {
+            items.remove(0);
+        }
+        else if(tes ==  3)
+        {
+            items.get(0).setStatus("606");
+        }
+
+        if(1 == 1)
+        {
+            tes++;
+            if(tes == 4)
+                tes = 0;
+
+            autoUpdateItemList.notifyObservers(items);
+            return;
+        }
+
+
         if (urlToJobRunner.containsKey(jobDescription.getThreadUrl()))
         {
             activeJobRunner = urlToJobRunner.get(jobDescription.getThreadUrl());
@@ -38,7 +76,11 @@ public class DownerModel
         activeJobRunner.startDownloads(jobDescription);
     }
 
-
+    public void removeAutoUpdateItem(JobListItem item)
+    {
+        items.remove(item);
+        autoUpdateItemList.notifyObservers(items);
+    }
 
 
     public void setNewActiveJobStats(JobStats jobStats)
