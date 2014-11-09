@@ -36,7 +36,7 @@ public class JobListPanel
         this.downerModel = downerModel;
         this.listContainer = constructListContainer();
 
-        downerModel.onAutoUpdateListChange(this::onListItemUpdate);
+        downerModel.onTaskListChange(this::onListItemUpdate);
     }
 
     public void onListItemUpdate(ArrayList<JobListItem> updatedList)

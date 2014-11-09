@@ -12,93 +12,52 @@ import java.util.HashMap;
 
 public class DownerModel
 {
-    private JobDescription activeJobDescription = null;
-    private JobStats activeJobStats = null;
-    private JobRunner activeJobRunner = null;
 
-    private CoolObservable<JobStats> activeJobStatusObservable = new CoolObservable<>();
-    private CoolObservable<ArrayList<JobListItem>> autoUpdateItemList = new CoolObservable<>();
 
-    private HashMap<String, JobRunner> urlToJobRunner = new HashMap<>();
 
-    private ArrayList<JobListItem> items = new ArrayList<>();
+    private TaskManager taskManager;
 
-    static int tes = 0;
+
+
+    public DownerModel()
+    {
+        taskManager = new TaskManager();
+        new Thread(taskManager).start();
+    }
+
+
     public synchronized void startNewJob(JobDescription jobDescription)
     {
-        if(tes == 0)
-        {
-            items.add(new JobListItem()
-                .setDescription(jobDescription.getThreadUrl().substring(0, 20))
-                .setStatus("404"));
-        }
-        else if(tes == 1)
-        {
-            items.add(new JobListItem()
-                    .setDescription(jobDescription.getThreadUrl().substring(0, 20))
-                    .setStatus("505"));
 
-            items.add(new JobListItem()
-                    .setDescription(jobDescription.getThreadUrl().substring(0, 20))
-                    .setStatus("505"));
-        }
-        else if(tes == 2)
-        {
-            items.remove(0);
-        }
-        else if(tes ==  3)
-        {
-            items.get(0).setStatus("606");
-        }
+        JobRunner activeJobRunner = new JobRunner(this, jobDescription);
+        taskManager.addTask(activeJobRunner);
 
-        if(1 == 1)
-        {
-            tes++;
-            if(tes == 4)
-                tes = 0;
-
-            autoUpdateItemList.notifyObservers(items);
-            return;
-        }
-
-
-        if (urlToJobRunner.containsKey(jobDescription.getThreadUrl()))
-        {
-            activeJobRunner = urlToJobRunner.get(jobDescription.getThreadUrl());
-        }
-        else
-        {
-            activeJobRunner = new JobRunner(this);
-            urlToJobRunner.put(jobDescription.getThreadUrl(), activeJobRunner);
-        }
-
-        activeJobDescription = jobDescription;
-        activeJobRunner.startDownloads(jobDescription);
     }
 
     public void removeAutoUpdateItem(JobListItem item)
     {
-        items.remove(item);
-        autoUpdateItemList.notifyObservers(items);
+        //items.remove(item);
+        //autoUpdateItemList.notifyObservers(items);
     }
 
 
     public void setNewActiveJobStats(JobStats jobStats)
     {
-        this.activeJobStats = jobStats;
-        activeJobStatusObservable.notifyObservers(jobStats);
+
     }
 
     public boolean isActiveJobRunning()
     {
-        return activeJobRunner != null && activeJobRunner.getIsDownloadRunning();
+        return false; //return activeJobRunner != null && activeJobRunner.getIsDownloadRunning();
     }
 
     public void cancelActiveJob()
     {
-        if (activeJobRunner != null)
-            activeJobRunner.cancelDownload();
+        //if (activeJobRunner != null)
+        //    activeJobRunner.cancelDownload();
+
     }
+
 
 
     /***
@@ -106,12 +65,12 @@ public class DownerModel
      */
     public void onActiveJobStatsChange(CoolObserver<JobStats> obs)
     {
-        activeJobStatusObservable.addObserver(obs);
+        //activeJobStatusObservable.addObserver(obs);
     }
 
-    public void onAutoUpdateListChange(CoolObserver<ArrayList<JobListItem>> obs)
+    public void onTaskListChange(CoolObserver<ArrayList<JobListItem>> obs)
     {
-        autoUpdateItemList.addObserver(obs);
+        taskManager.addTaskListObserver(obs);
     }
 
 }

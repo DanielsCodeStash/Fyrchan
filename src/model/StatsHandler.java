@@ -3,19 +3,23 @@ package model;
 import org.joda.time.DateTime;
 import shared.JobStats;
 import shared.JobStatus;
+import util.observable.CoolObservable;
+import util.observable.CoolObserver;
 
 import java.text.DecimalFormat;
 
 public class StatsHandler
 {
 
-    private DownerModel downerModel;
+
+    private CoolObservable<JobStatus> statusChange;
+    private CoolObservable<JobStats> statsChange;
 
     private int numFilesExisting = 0;
     private int filesToDownload = 0;
     private long totalDownedSizeKB = 0;
     private int filesDownloaded = 0;
-    private JobStatus status = JobStatus.STARTING_UP;
+    private JobStatus status;
 
     private DateTime timeStarted;
     private DateTime lastUpdate = null;
@@ -24,13 +28,19 @@ public class StatsHandler
 
     private DecimalFormat df;
 
-    public StatsHandler(DownerModel downerModel)
+    public StatsHandler()
     {
-        this.downerModel = downerModel;
-        updateStatsData();
         df = new DecimalFormat("###.#");
+        status = JobStatus.NOT_STARTED;
+
+        updateStatsData();
+
     }
 
+    public JobStatus getJobStatus()
+    {
+        return status;
+    }
 
     public synchronized void notifyDownloadStart(String url)
     {
@@ -53,6 +63,11 @@ public class StatsHandler
         }
 
         updateStatsData();
+    }
+
+    public synchronized void notifyStartingUp()
+    {
+        status = JobStatus.STARTING_UP;
     }
 
     public synchronized void notifyAllDownloadsAborted()
@@ -148,7 +163,6 @@ public class StatsHandler
                 .setPercentDone(doneNum);
 
         lastUpdate = new DateTime();
-        downerModel.setNewActiveJobStats(jobStats);
 
     }
 
@@ -170,5 +184,22 @@ public class StatsHandler
         timeStarted = new DateTime();
     }
 
+
+
+
+    public void addStatsChangeObs(CoolObserver<JobStats> obs)
+    {
+        statsChange.addObserver(obs);
+    }
+
+    public void addStatusChangeObs(CoolObserver<JobStatus> obs)
+    {
+        statusChange.addObserver(obs);
+    }
+
+    private void setStatus(JobStatus status)
+    {
+        this.status = status;
+    }
 
 }
