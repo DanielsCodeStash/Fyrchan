@@ -34,8 +34,6 @@ public class JobController
         jobPanel.getBasePath().setOnKeyReleased(event -> updatePathPreview());
         jobPanel.getSelectDirButton().setOnAction(actionEvent -> selectBaseDir());
         jobPanel.getRunButton().setOnAction(actionEvent -> startDownload());
-
-        downerModel.onActiveJobStatsChange(this::onJobStatsUpdate);
     }
 
     public void onStageShown()
@@ -46,15 +44,7 @@ public class JobController
 
 
 
-    public void onJobStatsUpdate(JobStats jobStats)
-    {
-        JobStatus newStatus = jobStats.getStatus();
-        if (newStatus != lastJobStatus)
-        {
-            Platform.runLater(() -> jobPanel.setNewJobStatus(newStatus));
-        }
 
-    }
 
     public String getPath()
     {
@@ -82,14 +72,8 @@ public class JobController
 
     private void startDownload()
     {
-        if (!downerModel.isActiveJobRunning())
-        {
-            downerModel.startNewJob(getJobData());
-        }
-        else
-        {
-            downerModel.cancelActiveJob();
-        }
+
+        downerModel.startNewJob(getJobData());
 
     }
 

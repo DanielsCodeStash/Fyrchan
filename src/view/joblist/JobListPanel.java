@@ -3,10 +3,12 @@ package view.joblist;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import model.DownerModel;
 import shared.JobListItem;
@@ -29,6 +31,7 @@ public class JobListPanel
 
 
     private CoolObservable<JobListItem> removeButtonObservable = new CoolObservable<>();
+    private CoolObservable<JobListItem> taskClickedObservable = new CoolObservable<>();
 
 
     public JobListPanel(DownerModel downerModel)
@@ -36,7 +39,7 @@ public class JobListPanel
         this.downerModel = downerModel;
         this.listContainer = constructListContainer();
 
-        downerModel.onTaskListChange(this::onListItemUpdate);
+        downerModel.addTaskListObserver(this::onListItemUpdate);
     }
 
     public void onListItemUpdate(ArrayList<JobListItem> updatedList)
@@ -106,7 +109,7 @@ public class JobListPanel
         listView.setCellFactory(stringListView -> new JobItemCell());
 
         // Panel title
-        Label title = new Label("Auto Update Tasks");
+        Label title = new Label("Active Tasks");
         title.setPadding(new Insets(0, 0, 10, 0));
 
         // container
@@ -139,6 +142,7 @@ public class JobListPanel
 
                 // containers
                 BorderPane mainPane = new BorderPane();
+                mainPane.setOnMouseClicked(mouseEvent -> taskClickedObservable.notifyObservers(item));
                 HBox rightContainer = new HBox();
 
                 // leaf nodes
@@ -163,6 +167,11 @@ public class JobListPanel
     public void onRemoveButtonClicked(CoolObserver<JobListItem> obs)
     {
         removeButtonObservable.addObserver(obs);
+    }
+
+    public void onRowClicked(CoolObserver<JobListItem> obs)
+    {
+        taskClickedObservable.addObserver(obs);
     }
 
     public VBox getListContainer()

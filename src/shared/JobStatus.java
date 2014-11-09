@@ -2,13 +2,13 @@ package shared;
 
 public enum JobStatus
 {
-    STARTING_UP, NOT_STARTED, RUNNING, DONE, ABORTING, ABORTED;
+    STARTING_UP, QUEUED, RUNNING, DONE, ABORTING, ABORTED;
 
     public String toString()
     {
         switch (this)
         {
-            case NOT_STARTED: return "Not started";
+            case QUEUED: return "Queued";
             case STARTING_UP: return "Starting up";
             case RUNNING: return "Running";
             case DONE: return "Done";

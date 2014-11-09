@@ -3,8 +3,9 @@ package model;
 import org.joda.time.DateTime;
 import shared.JobStats;
 import shared.JobStatus;
-import util.observable.CoolObservable;
-import util.observable.CoolObserver;
+import util.PeriodicAlarm;
+import util.observable.IdentObservable;
+import util.observable.IdentObserver;
 
 import java.text.DecimalFormat;
 
@@ -12,8 +13,8 @@ public class StatsHandler
 {
 
 
-    private CoolObservable<JobStatus> statusChange;
-    private CoolObservable<JobStats> statsChange;
+    private IdentObservable<StatsHandler, JobStatus> statusChange = new IdentObservable<>();
+    private IdentObservable<StatsHandler, JobStats> statsChange = new IdentObservable<>();
 
     private int numFilesExisting = 0;
     private int filesToDownload = 0;
@@ -22,8 +23,7 @@ public class StatsHandler
     private JobStatus status;
 
     private DateTime timeStarted;
-    private DateTime lastUpdate = null;
-    private JobStats jobStats = new JobStats();
+    private PeriodicAlarm autoUpdateAlarm = new PeriodicAlarm(1000);
 
 
     private DecimalFormat df;
@@ -31,9 +31,7 @@ public class StatsHandler
     public StatsHandler()
     {
         df = new DecimalFormat("###.#");
-        status = JobStatus.NOT_STARTED;
-
-        updateStatsData();
+        setNewStatus(JobStatus.QUEUED);
 
     }
 
@@ -44,10 +42,9 @@ public class StatsHandler
 
     public synchronized void notifyDownloadStart(String url)
     {
-        if (status == JobStatus.NOT_STARTED || status == JobStatus.STARTING_UP)
+        if (status == JobStatus.QUEUED || status == JobStatus.STARTING_UP)
         {
-            status = JobStatus.RUNNING;
-            updateStatsData();
+            setNewStatus(JobStatus.RUNNING);
         }
     }
 
@@ -59,34 +56,32 @@ public class StatsHandler
         totalDownedSizeKB += (filesize / 1000);
         if (filesDownloaded == filesToDownload)
         {
-            status = JobStatus.DONE;
+            setNewStatus(JobStatus.DONE);
         }
-
-        updateStatsData();
     }
 
     public synchronized void notifyStartingUp()
     {
-        status = JobStatus.STARTING_UP;
+        setNewStatus(JobStatus.STARTING_UP);
     }
 
     public synchronized void notifyAllDownloadsAborted()
     {
-        status = JobStatus.ABORTING;
-        updateStatsData();
+        setNewStatus(JobStatus.ABORTED);
     }
 
     public synchronized void notifyAllDownloadsDone()
     {
+
         if (status == JobStatus.ABORTING)
         {
-            status = JobStatus.ABORTED;
+            setNewStatus(JobStatus.ABORTED);
         }
         else
         {
-            status = JobStatus.DONE;
+            setNewStatus(JobStatus.DONE);
         }
-        updateStatsData();
+        sendStatsMessage();
     }
 
     public synchronized void notifyFileExists(String url)
@@ -95,7 +90,7 @@ public class StatsHandler
         numFilesExisting++;
     }
 
-    private synchronized void updateStatsData()
+    private synchronized JobStats getJobStats()
     {
 
         String files = "";
@@ -155,23 +150,35 @@ public class StatsHandler
         }
 
 
-        jobStats
+        JobStats jobStats = new JobStats()
                 .setStatus(status)
                 .setFiles(files)
                 .setSpeed(speed)
                 .setTime(time)
                 .setPercentDone(doneNum);
 
-        lastUpdate = new DateTime();
+
+        return jobStats;
 
     }
 
     public synchronized void statsHeartbeat()
     {
-        if (lastUpdate.getMillis() < new DateTime().getMillis() - 1000)
+        if(autoUpdateAlarm.isActive())
         {
-            updateStatsData();
+            sendStatsMessage();
         }
+    }
+
+    public synchronized void forceStatsUpdate()
+    {
+        sendStatsMessage();
+    }
+
+    public void sendStatsMessage()
+    {
+        statsChange.notifyObservers(this, getJobStats());
+        autoUpdateAlarm.reset();
     }
 
     public synchronized void setFilesToDownload(int numFiles)
@@ -185,21 +192,23 @@ public class StatsHandler
     }
 
 
-
-
-    public void addStatsChangeObs(CoolObserver<JobStats> obs)
+    public void addStatsChangeObs(IdentObserver<StatsHandler, JobStats> obs)
     {
         statsChange.addObserver(obs);
     }
 
-    public void addStatusChangeObs(CoolObserver<JobStatus> obs)
+    public void addStatusChangeObs(IdentObserver<StatsHandler, JobStatus> obs)
     {
         statusChange.addObserver(obs);
     }
 
-    private void setStatus(JobStatus status)
+    private void setNewStatus(JobStatus newStatus)
     {
-        this.status = status;
+        if(this.status != newStatus)
+        {
+            this.status = newStatus;
+            statusChange.notifyObservers(this, newStatus);
+        }
     }
 
 }

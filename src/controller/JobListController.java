@@ -18,11 +18,19 @@ public class JobListController
         this.fyrchan = fyrchan;
 
         jobListPanel.onRemoveButtonClicked(this::removeButtonClicked);
+        jobListPanel.onRowClicked(this::onRowClicked);
     }
 
     private void removeButtonClicked(JobListItem item)
     {
         downerModel.removeAutoUpdateItem(item);
     }
+
+    private void onRowClicked(JobListItem item)
+    {
+        downerModel.setNewActiveThreadUrl(item.getThreadUrl());
+    }
+
+
 
 }

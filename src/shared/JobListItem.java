@@ -9,6 +9,18 @@ public class JobListItem
     public int id;
     public String description;
     public String status;
+    public String threadUrl;
+
+    public String getThreadUrl()
+    {
+        return threadUrl;
+    }
+
+    public JobListItem setThreadUrl(String threadUrl)
+    {
+        this.threadUrl = threadUrl;
+        return this;
+    }
 
     public JobListItem()
     {

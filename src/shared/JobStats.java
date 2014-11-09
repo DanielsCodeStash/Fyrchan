@@ -8,6 +8,7 @@ public class JobStats
     public String time;
     public double percentDone;
 
+
     public JobStatus getStatus()
     {
         return status;

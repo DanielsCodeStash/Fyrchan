@@ -27,18 +27,29 @@ public class StatsPanel
     {
         this.statsGrid = constructStatsGrid();
 
-        downerModel.onActiveJobStatsChange(arg -> {
+        downerModel.addActiveStatsObserver(arg -> {
             Platform.runLater(() -> updateJobStats(arg));
         });
     }
 
     private void updateJobStats(JobStats jobStats)
     {
-        status.setText(jobStats.getStatus().toString());
-        progressBar.setProgress(jobStats.getPercentDone());
-        filesDowned.setText(jobStats.getFiles());
-        speed.setText(jobStats.getSpeed());
-        estimationDone.setText(jobStats.getTime());
+        if(jobStats != null)
+        {
+            status.setText(jobStats.getStatus().toString());
+            progressBar.setProgress(jobStats.getPercentDone());
+            filesDowned.setText(jobStats.getFiles());
+            speed.setText(jobStats.getSpeed());
+            estimationDone.setText(jobStats.getTime());
+        }
+        else
+        {
+            status.setText("");
+            progressBar.setProgress(0);
+            filesDowned.setText("");
+            speed.setText("");
+            estimationDone.setText("");
+        }
     }
 
 
@@ -55,7 +66,7 @@ public class StatsPanel
         Label statusLabel = new Label("Status:");
         grid.add(statusLabel, 0, 1);
 
-        status = new Label(JobStatus.NOT_STARTED.toString());
+        status = new Label("");
         grid.add(status, 1, 1);
 
         progressBar = new ProgressBar(0.0);

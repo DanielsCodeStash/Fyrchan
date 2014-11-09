@@ -100,7 +100,7 @@ public class JobPanel
         // start button
         runButton = new Button();
         runButton.setId("downloadButton");
-        setNewJobStatus(JobStatus.NOT_STARTED);
+        runButton.setText("Start Download");
         actionContainer.getChildren().add(runButton);
 
 
@@ -120,29 +120,6 @@ public class JobPanel
         return grid;
     }
 
-    public void setNewJobStatus(JobStatus jobStatus)
-    {
-        switch (jobStatus)
-        {
-            case STARTING_UP:
-            case RUNNING:
-                if (runButton.isDisabled()) runButton.setDisable(false);
-                runButton.setText("Abort Download");
-                break;
-
-            case NOT_STARTED:
-            case DONE:
-            case ABORTED:
-                runButton.setText("Start Download");
-                if (runButton.isDisabled()) runButton.setDisable(false);
-                break;
-
-            case ABORTING:
-                runButton.setText("Aborting...");
-                runButton.setDisable(true);
-                break;
-        }
-    }
 
 
     public TextField getThreadUrl()
