@@ -83,6 +83,13 @@
     -fx-background-color: #454545;
 }
 
+.menu-item .label
+{
+
+    -fx-text-fill: #636363;
+
+}
+
 #downloadButton {
 
     -fx-font-size: 15px;

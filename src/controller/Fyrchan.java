@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -13,6 +14,7 @@ import model.*;
 import view.joblist.JobListPanel;
 import view.JobPanel;
 import view.StatsPanel;
+
 
 public class Fyrchan extends Application
 {
@@ -44,6 +46,8 @@ public class Fyrchan extends Application
     {
         // initiate the applications model, view and controller
         downerModel = new DownerModel();
+
+
 
         jobPanel = new JobPanel(downerModel);
         statsPanel = new StatsPanel(downerModel);
@@ -101,10 +105,19 @@ public class Fyrchan extends Application
     {
         MenuBar menuBar = new MenuBar();
         menuBar.setId("menu");
-        Menu m = new Menu("File");
-        Menu mm = new Menu("About");
-        menuBar.getMenus().add(m);
-        menuBar.getMenus().add(mm);
+
+        Menu fileMenu = new Menu("File");
+        Menu aboutMenu = new Menu("About");
+
+        MenuItem tricked1 = new MenuItem("Tricked, nothing here.");
+        MenuItem tricked2 = new MenuItem("Tricked, nothing here either.");
+
+        fileMenu.getItems().add(tricked1);
+        aboutMenu.getItems().add(tricked2);
+
+        menuBar.getMenus().add(fileMenu);
+        menuBar.getMenus().add(aboutMenu);
+
         return menuBar;
     }
 
