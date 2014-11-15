@@ -1,13 +1,9 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import model.BaseSettings;
-import model.DownerModel;
 import model.parsing.PathHandler;
 import shared.JobDescription;
-import shared.JobStats;
-import shared.JobStatus;
 import view.JobPanel;
 
 import java.io.File;
@@ -16,17 +12,14 @@ public class JobController
 {
 
     private JobPanel jobPanel;
-    private Fyrchan fyrchan;
-    private DownerModel downerModel;
+    private ControllerManager controllerManager;
 
     private boolean threadUrlValid = true;
-    private JobStatus lastJobStatus = null;
 
-    public JobController(JobPanel jobPanel, DownerModel downerModel, Fyrchan fyrchan)
+    public JobController(JobPanel jobPanel, ControllerManager controllerManager)
     {
         this.jobPanel = jobPanel;
-        this.fyrchan = fyrchan;
-        this.downerModel = downerModel;
+        this.controllerManager = controllerManager;
 
         jobPanel.getThreadUrl().setOnKeyReleased(event -> onThreadUrlKeyUp());
         jobPanel.getThreadName().setOnKeyReleased(event -> updatePathPreview());
@@ -42,6 +35,13 @@ public class JobController
         jobPanel.getAutoUpdateCheckbox().setSelected(true);
     }
 
+    public void setJobDescriptionSelected(JobDescription jobDescription)
+    {
+        jobPanel.getThreadUrl().setText(jobDescription.getThreadUrl());
+        jobPanel.getAutoUpdateCheckbox().setSelected(jobDescription.getAutoUpdate());
+        jobPanel.getThreadName().setText(jobDescription.getThreadName());
+        jobPanel.getBasePath().setText(jobDescription.getBaseOutputPath());
+    }
 
 
 
@@ -54,7 +54,6 @@ public class JobController
 
         return PathHandler.getPath(basePath, threadName, threadUrlStr);
 
-
     }
 
 
@@ -62,7 +61,7 @@ public class JobController
     {
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle("Select directory");
-        File f = dirChooser.showDialog(fyrchan.getPrimaryStage());
+        File f = dirChooser.showDialog(controllerManager.getFyrchan().getPrimaryStage());
         if (f != null)
         {
             jobPanel.getBasePath().setText(f.getPath());
@@ -72,9 +71,10 @@ public class JobController
 
     private void startDownload()
     {
-
-        downerModel.startNewJob(getJobData());
-
+        JobDescription newJob = getJobData();
+        controllerManager.getDownerModel().startNewJob(newJob);
+        controllerManager.notifyJobAdded(newJob);
+        jobPanel.getThreadUrl().setText("");
     }
 
     private void resetThreadName()
@@ -96,8 +96,11 @@ public class JobController
     public JobDescription getJobData()
     {
         JobDescription jobDescription = new JobDescription()
-                .setPath(getPath())
-                .setThreadUrl(jobPanel.getThreadUrl().getText());
+                .setOutputPath(getPath())
+                .setThreadUrl(jobPanel.getThreadUrl().getText())
+                .setAutoUpdate(jobPanel.getAutoUpdateCheckbox().isSelected())
+                .setBaseOutputPath(jobPanel.getBasePath().getText())
+                .setThreadName(jobPanel.getThreadName().getText());
 
         System.out.println(jobDescription);
         return jobDescription;

@@ -21,14 +21,13 @@ public class TaskManager implements Runnable
     private HashMap<String, JobListItem> threadUrlToJobListItem = new HashMap<>();
     private ConcurrentLinkedQueue<JobRunner> taskQue = new ConcurrentLinkedQueue<>();
 
-    private boolean running = true;
+    private AtomicBoolean running = new AtomicBoolean(true);
     private JobRunner runningJob = null;
     private AtomicBoolean taskListUpdatePending = new AtomicBoolean(false);
 
-
     private void taskLoop() throws InterruptedException
     {
-        while (running)
+        while (running.get())
         {
             if (taskListUpdatePending.get())
             {
@@ -145,11 +144,17 @@ public class TaskManager implements Runnable
     {
         try
         {
+            Thread.currentThread().setName("TaskManager");
             taskLoop();
 
         } catch (InterruptedException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void notifyApplicationStop()
+    {
+        running.set(false);
     }
 }

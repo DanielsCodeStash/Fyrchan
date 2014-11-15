@@ -8,14 +8,12 @@ import view.joblist.JobListPanel;
 public class JobListController
 {
     private JobListPanel jobListPanel;
-    private DownerModel downerModel;
-    private Fyrchan fyrchan;
+    private ControllerManager controllerManager;
 
-    public JobListController(JobListPanel jobListPanel, DownerModel downerModel, Fyrchan fyrchan)
+    public JobListController(JobListPanel jobListPanel, ControllerManager controllerManager)
     {
         this.jobListPanel = jobListPanel;
-        this.downerModel = downerModel;
-        this.fyrchan = fyrchan;
+        this.controllerManager = controllerManager;
 
         jobListPanel.onRemoveButtonClicked(this::removeButtonClicked);
         jobListPanel.onRowClicked(this::onRowClicked);
@@ -23,12 +21,15 @@ public class JobListController
 
     private void removeButtonClicked(JobListItem item)
     {
-        downerModel.removeAutoUpdateItem(item);
+        controllerManager.notifyJobRemoved(item.getThreadUrl());
+        controllerManager.getDownerModel().removeAutoUpdateItem(item);
     }
 
     private void onRowClicked(JobListItem item)
     {
-        downerModel.setNewActiveThreadUrl(item.getThreadUrl());
+        controllerManager.notifyTaskClicked(item.getThreadUrl());
+        controllerManager.getDownerModel().setNewActiveThreadUrl(item.getThreadUrl());
+
     }
 
 

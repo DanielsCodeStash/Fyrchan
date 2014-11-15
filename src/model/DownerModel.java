@@ -16,7 +16,6 @@ public class DownerModel
 {
 
 
-
     private TaskManager taskManager;
 
     private HashMap<StatsHandler, String> statsHandlerToThreadUrl = new HashMap<>();
@@ -34,11 +33,11 @@ public class DownerModel
 
     public synchronized void startNewJob(JobDescription jobDescription)
     {
+        System.out.println(jobDescription);
         if(threadUrlToStatsHandler.containsKey(jobDescription.getThreadUrl()))
         {
             setNewActiveThreadUrl(jobDescription.getThreadUrl());
             System.out.println("Tried to add an already existing thread");
-            // TODO: if auto-update - elevate priority
             return;
         }
 
@@ -107,8 +106,15 @@ public class DownerModel
     private void onStatusUpdate(StatsHandler handler, JobStatus status)
     {
         if(handlerIsFromActiveThread(handler))
+        {
             activeStatusChange.notifyObservers(status);
+        }
 
+    }
+
+    public void notifyApplicationStop()
+    {
+        taskManager.notifyApplicationStop();
     }
 
     private boolean handlerIsFromActiveThread(StatsHandler handler)

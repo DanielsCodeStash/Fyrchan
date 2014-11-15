@@ -46,7 +46,7 @@ public class ThreadDowner implements Runnable
         }
         else
         {
-            File dir = new File(jobDescription.getPath());
+            File dir = new File(jobDescription.getOutputPath());
             if (!dir.isDirectory())
             {
                 boolean res = dir.mkdirs();
@@ -72,7 +72,7 @@ public class ThreadDowner implements Runnable
         for (int i = 0; i < fileUrls.size(); i++)
         {
             String fileUrl = fileUrls.get(i);
-            String outputPath = getOutFilePath(fileUrl, jobDescription.getPath(), i);
+            String outputPath = getOutFilePath(fileUrl, jobDescription.getOutputPath(), i);
 
             SingleFileDowner imgDowner = new SingleFileDowner(fileUrl, outputPath, statsHandler, downloadRunning);
             service.addTask(imgDowner);
@@ -97,6 +97,7 @@ public class ThreadDowner implements Runnable
         }
 
         onDownloadDone.runFun();
+        System.out.println("Threaddowner done");
 
     }
 
@@ -112,6 +113,7 @@ public class ThreadDowner implements Runnable
     {
         try
         {
+            Thread.currentThread().setName("ThreadDowner");
             download();
 
         } catch (IOException | InterruptedException e)

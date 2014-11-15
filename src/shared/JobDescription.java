@@ -3,7 +3,10 @@ package shared;
 public class JobDescription
 {
     private String threadUrl;
-    private String path;
+    private String threadName;
+    private String baseOutputPath;
+    private String outputPath;
+    private boolean autoUpdate;
 
 
     public String getThreadUrl()
@@ -18,14 +21,47 @@ public class JobDescription
     }
 
 
-    public String getPath()
+    public String getOutputPath()
     {
-        return path;
+        return outputPath;
     }
 
-    public JobDescription setPath(String path)
+    public JobDescription setOutputPath(String outputPath)
     {
-        this.path = path;
+        this.outputPath = outputPath;
+        return this;
+    }
+
+    public String getThreadName()
+    {
+        return threadName;
+    }
+
+    public JobDescription setThreadName(String threadName)
+    {
+        this.threadName = threadName;
+        return this;
+    }
+
+    public String getBaseOutputPath()
+    {
+        return baseOutputPath;
+    }
+
+    public JobDescription setBaseOutputPath(String baseOutputPath)
+    {
+        this.baseOutputPath = baseOutputPath;
+        return this;
+    }
+
+    public boolean getAutoUpdate()
+    {
+        return autoUpdate;
+    }
+
+    public JobDescription setAutoUpdate(boolean autoUpdate)
+    {
+        this.autoUpdate = autoUpdate;
         return this;
     }
 
@@ -34,7 +70,10 @@ public class JobDescription
     {
         return "JobDescription{" +
                 "threadUrl='" + threadUrl + '\'' +
-                ", path='" + path + '\'' +
+                ", threadName='" + threadName + '\'' +
+                ", baseOutputPath='" + baseOutputPath + '\'' +
+                ", outputPath='" + outputPath + '\'' +
+                ", autoUpdate=" + autoUpdate +
                 '}';
     }
 }

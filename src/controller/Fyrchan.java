@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -10,10 +11,15 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.*;
+import util.ResourceUtil;
 import view.joblist.JobListPanel;
 import view.JobPanel;
 import view.StatsPanel;
+
+import java.io.InputStream;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 public class Fyrchan extends Application
@@ -25,6 +31,7 @@ public class Fyrchan extends Application
     private JobListPanel jobListPanel;
 
     // controllers
+    private ControllerManager controllerManager;
     private JobController jobController;
     private JobListController jobListController;
 
@@ -44,18 +51,19 @@ public class Fyrchan extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        this.primaryStage = primaryStage;
+
         // initiate the applications model, view and controller
         downerModel = new DownerModel();
-
-
 
         jobPanel = new JobPanel(downerModel);
         statsPanel = new StatsPanel(downerModel);
         jobListPanel = new JobListPanel(downerModel);
 
-        jobController = new JobController(jobPanel, downerModel, this);
-        jobListController = new JobListController(jobListPanel, downerModel, this);
-
+        controllerManager = new ControllerManager(downerModel, this);
+        jobController = new JobController(jobPanel, controllerManager);
+        jobListController = new JobListController(jobListPanel, controllerManager);
+        controllerManager.setSubControllers(jobController, jobListController);
 
         // initiate main containers
         BorderPane mainPane = new BorderPane();
@@ -74,8 +82,7 @@ public class Fyrchan extends Application
         mainPane.setTop(upperContainer);
         mainPane.setCenter(lowerContainer);
 
-        // set scene and stage options
-        this.primaryStage = primaryStage;
+        // set scene  options
         primaryScene = new Scene(mainPane);
         setSceneOptions(primaryScene);
         setStageOptions(primaryStage, primaryScene);
@@ -86,19 +93,19 @@ public class Fyrchan extends Application
         // show everything
         primaryStage.show();
 
-
     }
 
     public void setStageOptions(Stage stage, Scene scene)
     {
         stage.setTitle("Fyrchan");
-        stage.getIcons().add(new Image("file:res/icon.png"));
+        stage.getIcons().add(ResourceUtil.getImage("icon.png"));
         stage.setScene(scene);
+
     }
 
     public void setSceneOptions(Scene scene)
     {
-        scene.getStylesheets().add(Fyrchan.class.getResource("../view/fyrstyle.css").toExternalForm());
+        scene.getStylesheets().add("/view/fyrstyle.css");
     }
 
     public MenuBar getMenuBar()
