@@ -50,7 +50,6 @@ public class StatsHandler
 
     public synchronized void notifyDownloadDone(String url, double filesize)
     {
-        //System.out.println(new DateTime().toString() + " | " + url + " done. Size: " + filesize);
 
         filesDownloaded++;
         totalDownedSizeKB += (filesize / 1000);
@@ -70,9 +69,9 @@ public class StatsHandler
         setNewStatus(JobStatus.ABORTED);
     }
 
-    public synchronized void notify404()
+    public synchronized void notifyNewStatus(JobStatus newStatus)
     {
-        setNewStatus(JobStatus.HTTP404);
+        setNewStatus(newStatus);
     }
 
     public synchronized void notifyAllDownloadsDone()

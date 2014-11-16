@@ -6,6 +6,8 @@ import model.parsing.ThreadParser;
 import org.jsoup.HttpStatusException;
 import org.jsoup.nodes.Document;
 import shared.JobDescription;
+import shared.JobStats;
+import shared.JobStatus;
 import util.ConHandler;
 import util.CoolThreadPool;
 import util.Funtastic;
@@ -36,49 +38,27 @@ public class ThreadDowner implements Runnable
 
     private void download() throws IOException, InterruptedException
     {
-        ArrayList<String> fileUrls;
-        try
-        {
-            Document threadDocument = ConHandler.getConnection(jobDescription.getThreadUrl()).get();
-            fileUrls = ThreadParser.getFileUrls(threadDocument);
-        }
-        catch (HttpStatusException ex)
-        {
-
-            onDownloadDone.runFun();
-            if(ex.getStatusCode() == 404)
-            {
-                statsHandler.notify404();
-            }
+        ArrayList<String> fileUrls = getFileUrls(jobDescription.getThreadUrl());
+        if (fileUrls == null)
             return;
+
+
+        File dir = new File(jobDescription.getOutputPath());
+        if (!dir.isDirectory())
+        {
+            boolean res = dir.mkdirs();
+            if (!res)
+                System.err.println("Could not create dir");
         }
 
-        if (fileUrls.isEmpty())
+        int numFiles = fileUrls.size();
+
+        System.out.println("Downloading " + numFiles + " files.");
+        statsHandler.setFilesToDownload(numFiles);
+
+        if (numFiles != fileUrls.size())
         {
-            System.out.println("No files yo.");
-            return;
-        }
-        else
-        {
-            File dir = new File(jobDescription.getOutputPath());
-            if (!dir.isDirectory())
-            {
-                boolean res = dir.mkdirs();
-                if (!res)
-                    System.err.println("Could not create dir");
-            }
-
-            int numFiles = fileUrls.size();
-
-
-            System.out.println("Downloading " + numFiles + " files.");
-            statsHandler.setFilesToDownload(numFiles);
-
-            if (numFiles != fileUrls.size())
-            {
-                System.out.println("Downloading " + numFiles + " of " + fileUrls.size() + " files, the rest exists already.");
-            }
-
+            System.out.println("Downloading " + numFiles + " of " + fileUrls.size() + " files, the rest exists already.");
         }
 
 
@@ -113,10 +93,51 @@ public class ThreadDowner implements Runnable
         onDownloadDone.runFun();
     }
 
+    public ArrayList<String> getFileUrls(String threadUrl)
+    {
+        ArrayList<String> fileUrls = null;
+        try
+        {
+            Document threadDocument = ConHandler.getConnection(threadUrl).get();
+            fileUrls = ThreadParser.getFileUrls(threadDocument);
+        } catch (HttpStatusException ex)
+        {
+            if (ex.getStatusCode() == 404)
+            {
+                exitKindly(JobStatus.HTTP404);
+            }
+            else
+            {
+                exitKindly(JobStatus.ERROR);
+            }
+        } catch (IllegalArgumentException ex)
+        {
+            exitKindly(JobStatus.INPUT_ERROR);
+
+        } catch (IOException e)
+        {
+            exitKindly(JobStatus.ERROR);
+        }
+
+        if (fileUrls != null && fileUrls.isEmpty())
+        {
+            exitKindly(JobStatus.DONE);
+            return null;
+        }
+
+        return fileUrls;
+    }
+
     private String getOutFilePath(String fileUrl, String path, int i)
     {
         String filetype = fileUrl.substring(fileUrl.lastIndexOf('.'));
         return path + i + filetype;
+    }
+
+    public void exitKindly(JobStatus exitStatus)
+    {
+        onDownloadDone.runFun();
+        statsHandler.notifyNewStatus(exitStatus);
     }
 
 
