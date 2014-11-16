@@ -3,6 +3,7 @@ package model.downloading;
 import model.BaseSettings;
 import model.StatsHandler;
 import model.parsing.ThreadParser;
+import org.jsoup.HttpStatusException;
 import org.jsoup.nodes.Document;
 import shared.JobDescription;
 import util.ConHandler;
@@ -35,9 +36,22 @@ public class ThreadDowner implements Runnable
 
     private void download() throws IOException, InterruptedException
     {
+        ArrayList<String> fileUrls;
+        try
+        {
+            Document threadDocument = ConHandler.getConnection(jobDescription.getThreadUrl()).get();
+            fileUrls = ThreadParser.getFileUrls(threadDocument);
+        }
+        catch (HttpStatusException ex)
+        {
 
-        Document threadDocument = ConHandler.getConnection(jobDescription.getThreadUrl()).get();
-        ArrayList<String> fileUrls = ThreadParser.getFileUrls(threadDocument);
+            onDownloadDone.runFun();
+            if(ex.getStatusCode() == 404)
+            {
+                statsHandler.notify404();
+            }
+            return;
+        }
 
         if (fileUrls.isEmpty())
         {
@@ -97,8 +111,6 @@ public class ThreadDowner implements Runnable
         }
 
         onDownloadDone.runFun();
-        System.out.println("Threaddowner done");
-
     }
 
     private String getOutFilePath(String fileUrl, String path, int i)

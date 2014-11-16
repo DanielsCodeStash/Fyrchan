@@ -81,7 +81,7 @@ public class TaskManager implements Runnable
 
         JobDescription jobDescription = job.getJobDescription();
         JobListItem item = new JobListItem()
-                .setDescription(jobDescription.getThreadUrl().substring(1, 20))
+                .setDescription(jobDescription.getEvaluatedName())
                 .setStatus(job.getJobStatus().toString())
                 .setThreadUrl(job.getJobDescription().getThreadUrl());
 

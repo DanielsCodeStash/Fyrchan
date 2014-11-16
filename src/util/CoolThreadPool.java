@@ -38,7 +38,7 @@ public class CoolThreadPool<T, F extends Callable<T>>
             if (!future.isDone())
                 return false;
         }
-
+        service.shutdown();
         return true;
     }
 

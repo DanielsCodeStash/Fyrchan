@@ -5,6 +5,27 @@ import model.BaseSettings;
 public class PathHandler
 {
 
+    public static class EvaluatedPath
+    {
+        private String fullPath;
+        private String evaluatedName;
+
+        public EvaluatedPath(String fullPath, String evaluatedName)
+        {
+            this.fullPath = fullPath;
+            this.evaluatedName = evaluatedName;
+        }
+
+        public String getFullPath()
+        {
+            return fullPath;
+        }
+
+        public String getEvaluatedName()
+        {
+            return evaluatedName;
+        }
+    }
 
     public static void main(String[] args)
     {
@@ -12,7 +33,7 @@ public class PathHandler
         System.out.println(getPath("C:\\", "<threadid>_<title>", "http://boards.4chan.org/hr/thread/2230521"));
     }
 
-    public static String getPath(String basePathStr, String threadNameStr, String threadUrlStr)
+    public static EvaluatedPath getPath(String basePathStr, String threadNameStr, String threadUrlStr)
     {
         if(!basePathStr.endsWith("\\"))
         {
@@ -32,7 +53,7 @@ public class PathHandler
             String[] urlParts = threadUrlStr.split("/");
 
             if (urlParts.length < 7)
-                return "Can't construct path.";
+                return new EvaluatedPath("Can't construct path.", null);
 
             threadId = urlParts[5];
             threadName = urlParts[6].replace("-", "_");
@@ -55,9 +76,9 @@ public class PathHandler
         outPath += threadNameStr;
 
         if (threadNameStr.isEmpty())
-            return outPath;
+            return new EvaluatedPath(outPath, "?");
         else
-            return outPath + "\\";
+            return new EvaluatedPath(outPath + "\\", threadNameStr);
     }
 
     public static boolean urlIsValid(String url)

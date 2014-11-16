@@ -83,7 +83,6 @@ public class DownerModel
 
     public void setNewActiveThreadUrl(String newActiveThreadUrl)
     {
-        System.out.println("new active ThreadUrl: " + newActiveThreadUrl);
         if(activeThreadUrl == null || !activeThreadUrl.equals(newActiveThreadUrl))
         {
             StatsHandler handler = threadUrlToStatsHandler.get(newActiveThreadUrl);

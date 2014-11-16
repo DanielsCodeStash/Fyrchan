@@ -147,7 +147,7 @@ public class JobListPanel
 
                 // leaf nodes
                 Label jobDescription = new Label(item.getDescription());
-                Label status = new Label(item.getStatus() + " " + item.getId() + "   ");
+                Label status = new Label(item.getStatus() + "   ");
                 StupidImageButton stupidButton = new StupidImageButton();
 
                 stupidButton.setOnClick(() -> removeButtonObservable.notifyObservers(item));

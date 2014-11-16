@@ -6,6 +6,7 @@ public class JobDescription
     private String threadName;
     private String baseOutputPath;
     private String outputPath;
+    private String evaluatedName;
     private boolean autoUpdate;
 
 
@@ -74,6 +75,23 @@ public class JobDescription
                 ", baseOutputPath='" + baseOutputPath + '\'' +
                 ", outputPath='" + outputPath + '\'' +
                 ", autoUpdate=" + autoUpdate +
+                ", evaluatedName=" + evaluatedName +
                 '}';
+    }
+
+    public String getEvaluatedName()
+    {
+        return evaluatedName;
+    }
+
+    public JobDescription setEvaluatedName(String evaluatedName)
+    {
+        this.evaluatedName = evaluatedName;
+        return this;
+    }
+
+    public boolean isAutoUpdate()
+    {
+        return autoUpdate;
     }
 }

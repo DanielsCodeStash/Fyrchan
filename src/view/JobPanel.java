@@ -100,7 +100,7 @@ public class JobPanel
         // start button
         runButton = new Button();
         runButton.setId("downloadButton");
-        runButton.setText("Start Download");
+        runButton.setText("Start new download");
         actionContainer.getChildren().add(runButton);
 
 

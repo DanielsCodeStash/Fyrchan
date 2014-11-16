@@ -39,14 +39,13 @@ public class JobController
     {
         jobPanel.getThreadUrl().setText(jobDescription.getThreadUrl());
         jobPanel.getAutoUpdateCheckbox().setSelected(jobDescription.getAutoUpdate());
-        jobPanel.getThreadName().setText(jobDescription.getThreadName());
         jobPanel.getBasePath().setText(jobDescription.getBaseOutputPath());
     }
 
 
 
 
-    public String getPath()
+    public PathHandler.EvaluatedPath getPath()
     {
         String basePath = jobPanel.getBasePath().getText();
         String threadName = jobPanel.getThreadName().getText();
@@ -90,19 +89,21 @@ public class JobController
 
     public String getPreviewPath()
     {
-        return getPath() + "1.png";
+        return getPath().getFullPath() + "1.png";
     }
 
     public JobDescription getJobData()
     {
+        PathHandler.EvaluatedPath path = getPath();
+
         JobDescription jobDescription = new JobDescription()
-                .setOutputPath(getPath())
+                .setOutputPath(path.getFullPath())
                 .setThreadUrl(jobPanel.getThreadUrl().getText())
                 .setAutoUpdate(jobPanel.getAutoUpdateCheckbox().isSelected())
                 .setBaseOutputPath(jobPanel.getBasePath().getText())
+                .setEvaluatedName(path.getEvaluatedName())
                 .setThreadName(jobPanel.getThreadName().getText());
 
-        System.out.println(jobDescription);
         return jobDescription;
     }
 

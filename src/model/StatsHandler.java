@@ -70,6 +70,11 @@ public class StatsHandler
         setNewStatus(JobStatus.ABORTED);
     }
 
+    public synchronized void notify404()
+    {
+        setNewStatus(JobStatus.HTTP404);
+    }
+
     public synchronized void notifyAllDownloadsDone()
     {
 
