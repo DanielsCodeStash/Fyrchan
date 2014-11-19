@@ -90,6 +90,7 @@ public class ThreadDowner implements Runnable
             }
         }
 
+        statsHandler.notifyAllDownloadsDone();
         onDownloadDone.runFun();
     }
 
@@ -100,6 +101,7 @@ public class ThreadDowner implements Runnable
         {
             Document threadDocument = ConHandler.getConnection(threadUrl).get();
             fileUrls = ThreadParser.getFileUrls(threadDocument);
+
         } catch (HttpStatusException ex)
         {
             if (ex.getStatusCode() == 404)
@@ -136,8 +138,8 @@ public class ThreadDowner implements Runnable
 
     public void exitKindly(JobStatus exitStatus)
     {
-        onDownloadDone.runFun();
         statsHandler.notifyNewStatus(exitStatus);
+        onDownloadDone.runFun();
     }
 
 

@@ -41,7 +41,7 @@ public class DownerModel
             return;
         }
 
-        JobRunner runner = new JobRunner(this, jobDescription);
+        JobRunner runner = new JobRunner(jobDescription);
         StatsHandler handler = runner.getStatsHandler();
 
         handler.addStatsChangeObs(this::onStatsUpdate);

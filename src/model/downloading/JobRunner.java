@@ -1,10 +1,13 @@
 package model.downloading;
 
+import model.BaseSettings;
 import model.DownerModel;
 import model.StatsHandler;
 import shared.JobDescription;
+import shared.JobStats;
 import shared.JobStatus;
 
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class JobRunner
@@ -12,16 +15,17 @@ public class JobRunner
 
     public AtomicBoolean jobRunning;
     private StatsHandler statsHandler;
-    private DownerModel downerModel;
     private JobDescription jobDescription;
 
+    private boolean autoUpdate;
+    private Long lastFinished = null;
 
-    public JobRunner(DownerModel downerModel, JobDescription jobDescription)
+    public JobRunner(JobDescription jobDescription)
     {
-        this.downerModel = downerModel;
         this.jobDescription = jobDescription;
         jobRunning = new AtomicBoolean(false);
         statsHandler = new StatsHandler();
+        autoUpdate = jobDescription.getAutoUpdate();
 
     }
 
@@ -39,8 +43,19 @@ public class JobRunner
     public void onDownloadDone()
     {
         jobRunning.set(false);
-        statsHandler.notifyAllDownloadsDone();
         System.out.println("Thread download done.");
+
+        JobStatus s = statsHandler.getJobStatus();
+        if(s == JobStatus.HTTP404 || s == JobStatus.INPUT_ERROR || s == JobStatus.ERROR)
+        {
+            autoUpdate = false;
+        }
+
+        if(autoUpdate)
+        {
+            lastFinished = new Date().getTime();
+            statsHandler.notifyNewStatus(JobStatus.WAITING);
+        }
     }
 
     public void cancelDownload()
@@ -69,13 +84,28 @@ public class JobRunner
         return statsHandler;
     }
 
+    public boolean isAutoUpdate()
+    {
+        return autoUpdate;
+    }
+
+    public long getMsToNextUpdate()
+    {
+        if(!autoUpdate || lastFinished == null)
+            return -1;
+
+        return (lastFinished + BaseSettings.msBetweenAutomaticUpdate) - new Date().getTime();
+    }
+
     public boolean needUpdate()
     {
+        if(!autoUpdate)
+            return false;
+
+        if(new Date().getTime() > lastFinished + BaseSettings.msBetweenAutomaticUpdate)
+            return true;
+
         return false;
     }
 
-    public void update()
-    {
-
-    }
 }

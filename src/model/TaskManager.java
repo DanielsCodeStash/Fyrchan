@@ -24,6 +24,7 @@ public class TaskManager implements Runnable
     private AtomicBoolean running = new AtomicBoolean(true);
     private JobRunner runningJob = null;
     private AtomicBoolean taskListUpdatePending = new AtomicBoolean(false);
+    private int timeSinceLastUpdate = 0;
 
     private void taskLoop() throws InterruptedException
     {
@@ -46,6 +47,11 @@ public class TaskManager implements Runnable
 
             }
 
+            if(timeSinceLastUpdate++ > 10)
+            {
+                taskListUpdatePending.set(true);
+                timeSinceLastUpdate = 0;
+            }
             Thread.sleep(100);
 
         }
@@ -62,6 +68,17 @@ public class TaskManager implements Runnable
                 return jobRunner;
             }
         }
+
+        for (JobRunner jobRunner : taskQue)
+        {
+            if (jobRunner.needUpdate())
+            {
+                taskQue.remove(jobRunner);
+                taskQue.add(jobRunner);
+                return jobRunner;
+            }
+        }
+
         return null;
     }
 
@@ -102,7 +119,15 @@ public class TaskManager implements Runnable
         for (JobRunner jr : taskQue)
         {
             JobListItem item = threadUrlToJobListItem.get(jr.getJobDescription().getThreadUrl());
-            item.setStatus(jr.getJobStatus().toString());
+
+            String rightText = "";
+            rightText += jr.getJobStatus().toString();
+            if(jr.isAutoUpdate() && jr.getMsToNextUpdate() > 0)
+            {
+                rightText += " " +  jr.getMsToNextUpdate() / 1000 + "s";
+            }
+
+            item.setStatus(rightText);
         }
         jobList.notifyObservers(jobListItems);
     }
