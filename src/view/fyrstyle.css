@@ -58,6 +58,7 @@
 .indexed-cell:even
 {
     -fx-background-color: #DBDBDB;
+    //-fx-background-color: #C9C9C9;
 }
 
 .cell:hover

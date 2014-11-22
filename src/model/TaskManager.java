@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
 import model.downloading.JobRunner;
 import shared.JobDescription;
 import shared.JobListItem;
@@ -97,6 +98,7 @@ public class TaskManager implements Runnable
     {
 
         JobDescription jobDescription = job.getJobDescription();
+
         JobListItem item = new JobListItem()
                 .setDescription(jobDescription.getEvaluatedName())
                 .setStatus(job.getJobStatus().toString())

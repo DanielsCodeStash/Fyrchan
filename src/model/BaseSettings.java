@@ -16,7 +16,7 @@ public class BaseSettings
     public static int threadTimeout = 20 * 1000;
     public static int numGatherThreads = 3;
     public static int maxFileSize = 6 * 1000 * 1000;
-    public static long msBetweenAutomaticUpdate = 60 * 1000;
+    public static long msBetweenAutomaticUpdate = 15 * 1000;
 
     public static int maxCharsInThreadTitleName = 20;
     public static String exampleThreadId = "523546";

@@ -1,10 +1,8 @@
 package model.downloading;
 
 import model.BaseSettings;
-import model.DownerModel;
 import model.StatsHandler;
 import shared.JobDescription;
-import shared.JobStats;
 import shared.JobStatus;
 
 import java.util.Date;
@@ -54,7 +52,7 @@ public class JobRunner
         if(autoUpdate)
         {
             lastFinished = new Date().getTime();
-            statsHandler.notifyNewStatus(JobStatus.WAITING);
+            statsHandler.notifyNewStatus(JobStatus.SLEEPING);
         }
     }
 

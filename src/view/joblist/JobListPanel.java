@@ -25,13 +25,17 @@ public class JobListPanel
     private DownerModel downerModel;
 
     private VBox listContainer;
+    private ListView<JobListItem> listView;
 
     private ObservableList<JobListItem> items = FXCollections.observableArrayList();
     private HashMap<Integer, JobListItem> idToItem = new HashMap<>();
 
-
     private CoolObservable<JobListItem> removeButtonObservable = new CoolObservable<>();
     private CoolObservable<JobListItem> taskClickedObservable = new CoolObservable<>();
+
+    // itemIdToJobItemCell is a workaround to update a cell without triggering a full
+    // list-update that causes flickering when using odd/even row coloring
+    public HashMap<Integer, JobItemCell> itemIdToJobItemCell = new HashMap<>();
 
 
     public JobListPanel(DownerModel downerModel)
@@ -78,7 +82,11 @@ public class JobListPanel
             {
                 idToItem.put(ji.getId(), ji.copy());
             }
-            items.addAll(newItems);
+
+            if(!newItems.isEmpty())
+            {
+                items.addAll(newItems);
+            }
 
             // remove
             for(JobListItem ji : deletedItems)
@@ -92,21 +100,41 @@ public class JobListPanel
             {
                 if(updatedItems.containsKey(eitem.getId()))
                 {
-                    int index = items.indexOf(eitem);
-                    items.set(index, updatedItems.get(eitem.getId()));
+                    JobListItem updatedItem = updatedItems.get(eitem.getId());
+                    int itemIndex = items.indexOf(eitem);
+                    JobListItem itemToUpdate = items.get(itemIndex);
+                    JobItemCell cellToUpdate = itemIdToJobItemCell.get(updatedItem.getId());
+
+                    // see itemIdToJobItemCell definition-comment
+                    if(cellToUpdate != null)
+                    {
+                        itemToUpdate.setStatus(updatedItem.getStatus());
+                        itemIdToJobItemCell.get(updatedItem.getId()).updateItem(updatedItem, false);
+                    }
                 }
             }
         });
 
     }
 
+    public void setCellReference(int jobId, JobItemCell cell)
+    {
+        itemIdToJobItemCell.put(jobId, cell);
+    }
+
+    public void removeCellReference(int jobId)
+    {
+        itemIdToJobItemCell.remove(jobId);
+    }
+
 
     public VBox constructListContainer()
     {
         // list config
-        ListView<JobListItem> listView = new ListView<>();
+        listView = new ListView<>();
         listView.setItems(items);
-        listView.setCellFactory(stringListView -> new JobItemCell());
+        listView.setCellFactory(stringListView -> new JobItemCell(this));
+        listView.setEditable(false);
 
         // Panel title
         Label title = new Label("Active Tasks");
@@ -124,45 +152,6 @@ public class JobListPanel
         return listContainer;
     }
 
-    private class JobItemCell extends ListCell<JobListItem>
-    {
-        @Override
-        public void updateItem(JobListItem item, boolean empty)
-        {
-            super.updateItem(item, empty);
-
-            if(empty)
-            {
-                setGraphic(null);
-            }
-            else
-            {
-                if (item == null)
-                    return;
-
-                // containers
-                BorderPane mainPane = new BorderPane();
-                mainPane.setOnMouseClicked(mouseEvent -> taskClickedObservable.notifyObservers(item));
-                HBox rightContainer = new HBox();
-
-                // leaf nodes
-                Label jobDescription = new Label(item.getDescription());
-                Label status = new Label(item.getStatus() + "   ");
-                StupidImageButton stupidButton = new StupidImageButton();
-
-                stupidButton.setOnClick(() -> removeButtonObservable.notifyObservers(item));
-
-                // set up structure
-                rightContainer.getChildren().add(status);
-                rightContainer.getChildren().add(stupidButton.getView());
-
-                mainPane.setLeft(jobDescription);
-                mainPane.setRight(rightContainer);
-                setGraphic(mainPane);
-            }
-
-        }
-    }
 
     public void onRemoveButtonClicked(CoolObserver<JobListItem> obs)
     {
@@ -177,5 +166,15 @@ public class JobListPanel
     public VBox getListContainer()
     {
         return listContainer;
+    }
+
+    public CoolObservable<JobListItem> getTaskClickedObservable()
+    {
+        return taskClickedObservable;
+    }
+
+    public CoolObservable<JobListItem> getRemoveButtonObservable()
+    {
+        return removeButtonObservable;
     }
 }

@@ -2,7 +2,7 @@ package shared;
 
 public enum JobStatus
 {
-    STARTING_UP, QUEUED, RUNNING, DONE, ABORTING, ABORTED, HTTP404, ERROR, INPUT_ERROR, WAITING;
+    STARTING_UP, QUEUED, RUNNING, DONE, ABORTING, ABORTED, HTTP404, ERROR, INPUT_ERROR, SLEEPING;
 
     public String toString()
     {
@@ -17,7 +17,7 @@ public enum JobStatus
             case HTTP404:       return "404";
             case ERROR:         return "Error";
             case INPUT_ERROR:   return "Input Error";
-            case WAITING:       return "Waiting";
+            case SLEEPING:       return "Sleeping";
 
         }
         return "JobStatus toString failed LOL";

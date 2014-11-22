@@ -1,5 +1,7 @@
 package shared;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobListItem
@@ -8,7 +10,7 @@ public class JobListItem
 
     public int id;
     public String description;
-    public String status;
+    public String status = new String();
     public String threadUrl;
 
     public String getThreadUrl()
