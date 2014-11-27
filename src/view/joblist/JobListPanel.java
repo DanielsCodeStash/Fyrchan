@@ -35,7 +35,8 @@ public class JobListPanel
 
     // itemIdToJobItemCell is a workaround to update a cell without triggering a full
     // list-update that causes flickering when using odd/even row coloring
-    public HashMap<Integer, JobItemCell> itemIdToJobItemCell = new HashMap<>();
+    private HashMap<Integer, JobItemCell> itemIdToJobItemCell = new HashMap<>();
+    private Integer selectedJobItemId = null;
 
 
     public JobListPanel(DownerModel downerModel)
@@ -44,6 +45,7 @@ public class JobListPanel
         this.listContainer = constructListContainer();
 
         downerModel.addTaskListObserver(this::onListItemUpdate);
+        taskClickedObservable.addObserver(clickedItem -> selectedJobItemId = clickedItem.getId());
     }
 
     public void onListItemUpdate(ArrayList<JobListItem> updatedList)
@@ -85,6 +87,9 @@ public class JobListPanel
 
             if(!newItems.isEmpty())
             {
+                // a newly added item will automatically be selected
+                selectedJobItemId = newItems.get(0).getId();
+
                 items.addAll(newItems);
             }
 
@@ -177,4 +182,10 @@ public class JobListPanel
     {
         return removeButtonObservable;
     }
+
+    public Integer getSelectedJobItemId()
+    {
+        return selectedJobItemId;
+    }
+
 }

@@ -3,6 +3,7 @@ package view.joblist;
 import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -66,23 +67,29 @@ public class JobItemCell extends ListCell<JobListItem>
                     jobListPanel.removeCellReference(item.getId());
                 }
             }
-
         }
         else
         {
+            // handle first-time showing tasks
             if(!shown)
             {
                 setGraphic(mainPane);
                 shown = true;
 
                 jobListPanel.setCellReference(item.getId(), this);
+
                 mainPane.setOnMouseClicked(mouseEvent -> jobListPanel.getTaskClickedObservable().notifyObservers(item));
                 stupidButton.setOnClick(() -> jobListPanel.getRemoveButtonObservable().notifyObservers(item));
             }
 
+            // if this cell has been marked as active, its our job to actually mark it as selected
+            if(jobListPanel.getSelectedJobItemId() == item.getId() && !this.isSelected())
+            {
+                this.getListView().getSelectionModel().select(this.getIndex());
+            }
 
+            // update fields
             jobDescription.setText(item.getDescription());
-
             String statusText = item.getStatus();
             if(statusText.contains("Sleeping") && statusText.length() < "Sleeping XXs".length())
             {

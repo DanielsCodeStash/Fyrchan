@@ -1,17 +1,15 @@
 package shared;
 
-import javafx.beans.property.SimpleStringProperty;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobListItem
 {
     private static AtomicInteger idTicker = new AtomicInteger(0);
 
-    public int id;
-    public String description;
-    public String status = new String();
-    public String threadUrl;
+    private int id;
+    private String description;
+    private String status;
+    private String threadUrl;
 
     public String getThreadUrl()
     {
