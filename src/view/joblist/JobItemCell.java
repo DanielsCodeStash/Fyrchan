@@ -33,7 +33,6 @@ public class JobItemCell extends ListCell<JobListItem>
 
         // containers
         mainPane = new BorderPane();
-
         HBox rightContainer = new HBox();
 
         // leaf nodes
