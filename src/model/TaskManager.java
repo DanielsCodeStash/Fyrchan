@@ -126,7 +126,13 @@ public class TaskManager implements Runnable
             rightText += jr.getJobStatus().toString();
             if(jr.isAutoUpdate() && jr.getMsToNextUpdate() > 0)
             {
-                rightText += " " +  jr.getMsToNextUpdate() / 1000 + "s";
+                String countText = " " +  jr.getMsToNextUpdate() / 1000 + "s";
+                rightText += countText;
+                item.setSleepingNr(countText);
+            }
+            else
+            {
+                item.setSleepingNr(null);
             }
 
             item.setStatus(rightText);

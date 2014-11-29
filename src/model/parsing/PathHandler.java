@@ -39,6 +39,10 @@ public class PathHandler
         {
             basePathStr += "\\";
         }
+        if(threadUrlStr.contains("#reply"))
+        {
+            threadUrlStr = threadUrlStr.replace("#reply", "");
+        }
 
         String outPath = basePathStr;
 

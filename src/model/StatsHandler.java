@@ -44,7 +44,7 @@ public class StatsHandler
     {
         if (status == JobStatus.QUEUED || status == JobStatus.STARTING_UP)
         {
-            setNewStatus(JobStatus.RUNNING);
+            setNewStatus(JobStatus.DOWNLOADING);
         }
     }
 

@@ -1,21 +1,10 @@
 package view.joblist;
 
-import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.*;
 import shared.JobListItem;
-import shared.JobStatus;
-
-import java.awt.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
 
 public class JobItemCell extends ListCell<JobListItem>
 {
@@ -88,13 +77,23 @@ public class JobItemCell extends ListCell<JobListItem>
                 this.getListView().getSelectionModel().select(this.getIndex());
             }
 
-            // update fields
+            // update row text
             jobDescription.setText(item.getDescription());
+
+            // ghetto way of sending info about the status via jobItem
+            // this should be fixed
             String statusText = item.getStatus();
-            if(statusText.contains("Sleeping") && statusText.length() < "Sleeping XXs".length())
+            if(statusText.contains("Sleeping"))
             {
-                // ghetto formatting :>
-                statusText = statusText.replace(" ", "   ");
+                if(item.getSleepingNr() != null)
+                {
+                    if(item.getSleepingNr().trim().length() == 2) // Xs
+                        statusText = statusText.replace(" ", "   ");
+                }
+                else
+                {
+                    statusText = "Queued";
+                }
             }
             statusText += "   ";
             status.setText(statusText);

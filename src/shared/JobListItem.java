@@ -10,6 +10,7 @@ public class JobListItem
     private String description;
     private String status;
     private String threadUrl;
+    private String sleepingNr;
 
     public String getThreadUrl()
     {
@@ -103,5 +104,15 @@ public class JobListItem
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 "}";
+    }
+
+    public String getSleepingNr()
+    {
+        return sleepingNr;
+    }
+
+    public void setSleepingNr(String sleepingNr)
+    {
+        this.sleepingNr = sleepingNr;
     }
 }
