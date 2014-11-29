@@ -1,10 +1,7 @@
 package controller;
 
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
 import model.DownerModel;
 import shared.JobDescription;
-import util.observable.CoolObservable;
 
 import java.util.HashMap;
 
@@ -14,7 +11,6 @@ public class ControllerManager
     private DownerModel downerModel;
 
     private JobController jobController = null;
-    private JobListController jobListController = null;
 
 
     private HashMap<String, JobDescription> threadUrlToJobDescription = new HashMap<>();
@@ -34,7 +30,6 @@ public class ControllerManager
 
     public void setSubControllers(JobController jobController, JobListController jobListController)
     {
-        this.jobListController = jobListController;
         this.jobController = jobController;
     }
 
@@ -64,8 +59,8 @@ public class ControllerManager
     {
         if (jobController != null)
         {
-            JobDescription jobSelected  = threadUrlToJobDescription.get(threadUrl);
-            if(jobSelected != null)
+            JobDescription jobSelected = threadUrlToJobDescription.get(threadUrl);
+            if (jobSelected != null)
             {
                 jobController.setJobDescriptionSelected(jobSelected);
             }

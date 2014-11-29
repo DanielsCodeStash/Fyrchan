@@ -85,7 +85,7 @@ public class StatsHandler
 
     public synchronized void notifyAllDownloadsDone()
     {
-        if(filesDownloaded != numFilesExisting)
+        if (filesDownloaded != numFilesExisting)
         {
             totalTimeSpentDownloading += new Date().getTime() - timeStarted;
         }
@@ -182,7 +182,7 @@ public class StatsHandler
 
     public synchronized void statsHeartbeat()
     {
-        if(autoUpdateAlarm.isActive())
+        if (autoUpdateAlarm.isActive())
         {
             sendStatsMessage();
         }
@@ -222,7 +222,7 @@ public class StatsHandler
 
     private void setNewStatus(JobStatus newStatus)
     {
-        if(this.status != newStatus)
+        if (this.status != newStatus)
         {
             this.status = newStatus;
             statusChange.notifyObservers(this, newStatus);
@@ -232,7 +232,7 @@ public class StatsHandler
     private long getTimeSpentDownloading()
     {
         long time = totalTimeSpentDownloading;
-        if(status == JobStatus.DOWNLOADING)
+        if (status == JobStatus.DOWNLOADING)
         {
             time += new Date().getTime() - timeStarted;
         }

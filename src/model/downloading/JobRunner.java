@@ -30,7 +30,7 @@ public class JobRunner
 
     public void startDownloads()
     {
-        if(!firstRun)
+        if (!firstRun)
         {
             statsHandler.performBeforeUpdateReset();
         }
@@ -49,12 +49,12 @@ public class JobRunner
         jobRunning.set(false);
 
         JobStatus s = statsHandler.getJobStatus();
-        if(s == JobStatus.HTTP404 || s == JobStatus.INPUT_ERROR || s == JobStatus.ERROR)
+        if (s == JobStatus.HTTP404 || s == JobStatus.INPUT_ERROR || s == JobStatus.ERROR)
         {
             autoUpdate = false;
         }
 
-        if(autoUpdate)
+        if (autoUpdate)
         {
             lastFinished = new Date().getTime();
             statsHandler.notifyNewStatus(JobStatus.SLEEPING);
@@ -95,7 +95,7 @@ public class JobRunner
 
     public long getMsToNextUpdate()
     {
-        if(!autoUpdate || lastFinished == null)
+        if (!autoUpdate || lastFinished == null)
             return -1;
 
         return (lastFinished + BaseSettings.msBetweenAutomaticUpdate) - new Date().getTime();
@@ -103,10 +103,10 @@ public class JobRunner
 
     public boolean needUpdate()
     {
-        if(!autoUpdate)
+        if (!autoUpdate)
             return false;
 
-        if(new Date().getTime() > lastFinished + BaseSettings.msBetweenAutomaticUpdate)
+        if (new Date().getTime() > lastFinished + BaseSettings.msBetweenAutomaticUpdate)
             return true;
 
         return false;

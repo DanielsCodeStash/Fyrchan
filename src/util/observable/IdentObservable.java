@@ -35,7 +35,7 @@ public class IdentObservable<F, T>
         }
     }
 
-    public synchronized void deleteObserver(IdentObservable<F, T> o)
+    public synchronized void deleteObserver(IdentObserver<F, T> o)
     {
         observers.remove(o);
     }

@@ -8,7 +8,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import model.DownerModel;
 import shared.JobStats;
-import shared.JobStatus;
 
 public class StatsPanel
 {
@@ -34,7 +33,7 @@ public class StatsPanel
 
     private void updateJobStats(JobStats jobStats)
     {
-        if(jobStats != null)
+        if (jobStats != null)
         {
             status.setText(jobStats.getStatus().toString());
             progressBar.setProgress(jobStats.getPercentDone());

@@ -33,8 +33,7 @@ public class DownerModel
 
     public synchronized void startNewJob(JobDescription jobDescription)
     {
-        System.out.println(jobDescription);
-        if(threadUrlToStatsHandler.containsKey(jobDescription.getThreadUrl()))
+        if (threadUrlToStatsHandler.containsKey(jobDescription.getThreadUrl()))
         {
             setNewActiveThreadUrl(jobDescription.getThreadUrl());
             System.out.println("Tried to add an already existing thread");
@@ -62,10 +61,10 @@ public class DownerModel
         threadUrlToStatsHandler.remove(item.getThreadUrl());
         statsHandlerToThreadUrl.remove(handler);
 
-        if(activeThreadUrl == null || activeThreadUrl.equals(item.getThreadUrl()))
+        if (activeThreadUrl == null || activeThreadUrl.equals(item.getThreadUrl()))
         {
             Set<String> urls = threadUrlToStatsHandler.keySet();
-            if(!urls.isEmpty())
+            if (!urls.isEmpty())
             {
                 String newUrl = urls.iterator().next();
                 setNewActiveThreadUrl(newUrl);
@@ -83,10 +82,10 @@ public class DownerModel
 
     public void setNewActiveThreadUrl(String newActiveThreadUrl)
     {
-        if(activeThreadUrl == null || !activeThreadUrl.equals(newActiveThreadUrl))
+        if (activeThreadUrl == null || !activeThreadUrl.equals(newActiveThreadUrl))
         {
             StatsHandler handler = threadUrlToStatsHandler.get(newActiveThreadUrl);
-            if(handler != null)
+            if (handler != null)
             {
                 activeThreadUrl = newActiveThreadUrl;
                 handler.forceStatsUpdate();
@@ -96,7 +95,7 @@ public class DownerModel
 
     private void onStatsUpdate(StatsHandler handler, JobStats stats)
     {
-        if(handlerIsFromActiveThread(handler))
+        if (handlerIsFromActiveThread(handler))
         {
             activeStatsChange.notifyObservers(stats);
         }
@@ -104,7 +103,7 @@ public class DownerModel
 
     private void onStatusUpdate(StatsHandler handler, JobStatus status)
     {
-        if(handlerIsFromActiveThread(handler))
+        if (handlerIsFromActiveThread(handler))
         {
             activeStatusChange.notifyObservers(status);
         }
@@ -118,11 +117,11 @@ public class DownerModel
 
     private boolean handlerIsFromActiveThread(StatsHandler handler)
     {
-        if(activeThreadUrl == null)
+        if (activeThreadUrl == null)
             return false;
 
         String handlersThreadUrl = statsHandlerToThreadUrl.get(handler);
-        if(handlersThreadUrl == null)
+        if (handlersThreadUrl == null)
             return false;
 
         return handlersThreadUrl.equals(activeThreadUrl);

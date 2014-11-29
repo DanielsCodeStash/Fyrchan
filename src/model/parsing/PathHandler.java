@@ -35,11 +35,11 @@ public class PathHandler
 
     public static EvaluatedPath getPath(String basePathStr, String threadNameStr, String threadUrlStr)
     {
-        if(!basePathStr.endsWith("\\"))
+        if (!basePathStr.endsWith("\\"))
         {
             basePathStr += "\\";
         }
-        if(threadUrlStr.contains("#reply"))
+        if (threadUrlStr.contains("#reply"))
         {
             threadUrlStr = threadUrlStr.replace("#reply", "");
         }

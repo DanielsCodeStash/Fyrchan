@@ -45,13 +45,13 @@ public class JobItemCell extends ListCell<JobListItem>
     {
         super.updateItem(item, empty);
 
-        if(empty || item == null)
+        if (empty || item == null)
         {
-            if(shown)
+            if (shown)
             {
                 setGraphic(null);
                 shown = false;
-                if(item != null)
+                if (item != null)
                 {
                     jobListPanel.removeCellReference(item.getId());
                 }
@@ -60,7 +60,7 @@ public class JobItemCell extends ListCell<JobListItem>
         else
         {
             // handle first-time showing tasks
-            if(!shown)
+            if (!shown)
             {
                 setGraphic(mainPane);
                 shown = true;
@@ -72,7 +72,7 @@ public class JobItemCell extends ListCell<JobListItem>
             }
 
             // if this cell has been marked as active, its our job to actually mark it as selected
-            if(jobListPanel.getSelectedJobItemId() == item.getId() && !this.isSelected())
+            if (jobListPanel.getSelectedJobItemId() == item.getId() && !this.isSelected())
             {
                 this.getListView().getSelectionModel().select(this.getIndex());
             }
@@ -83,11 +83,11 @@ public class JobItemCell extends ListCell<JobListItem>
             // ghetto way of sending info about the status via jobItem
             // this should be fixed
             String statusText = item.getStatus();
-            if(statusText.contains("Sleeping"))
+            if (statusText.contains("Sleeping"))
             {
-                if(item.getSleepingNr() != null)
+                if (item.getSleepingNr() != null)
                 {
-                    if(item.getSleepingNr().trim().length() == 2) // Xs
+                    if (item.getSleepingNr().trim().length() == 2) // Xs
                         statusText = statusText.replace(" ", "   ");
                 }
                 else

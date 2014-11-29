@@ -1,6 +1,5 @@
 package model;
 
-import javafx.beans.property.SimpleStringProperty;
 import model.downloading.JobRunner;
 import shared.JobDescription;
 import shared.JobListItem;
@@ -48,7 +47,7 @@ public class TaskManager implements Runnable
 
             }
 
-            if(timeSinceLastUpdate++ > 10)
+            if (timeSinceLastUpdate++ > 10)
             {
                 taskListUpdatePending.set(true);
                 timeSinceLastUpdate = 0;
@@ -122,9 +121,9 @@ public class TaskManager implements Runnable
 
             String rightText = "";
             rightText += jr.getJobStatus().toString();
-            if(jr.isAutoUpdate() && jr.getMsToNextUpdate() > 0)
+            if (jr.isAutoUpdate() && jr.getMsToNextUpdate() > 0)
             {
-                String countText = " " +  jr.getMsToNextUpdate() / 1000 + "s";
+                String countText = " " + jr.getMsToNextUpdate() / 1000 + "s";
                 rightText += countText;
                 item.setSleepingNr(countText);
             }

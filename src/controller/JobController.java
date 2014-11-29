@@ -43,8 +43,6 @@ public class JobController
     }
 
 
-
-
     public PathHandler.EvaluatedPath getPath()
     {
         String basePath = jobPanel.getBasePath().getText();

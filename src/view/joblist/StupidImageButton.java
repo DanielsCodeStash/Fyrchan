@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import util.Funtastic;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -17,7 +18,7 @@ public class StupidImageButton
 
     public StupidImageButton()
     {
-        if(cancelImage == null)
+        if (cancelImage == null)
         {
             cancelImage = new Image("file:res/cancel_icon.png");
         }
@@ -32,19 +33,18 @@ public class StupidImageButton
         imageView.setOnMouseExited(e -> buttonAnimator.cancel());
 
 
-
     }
 
     private void runAnimation()
     {
-        if(buttonAnimator == null)
+        if (buttonAnimator == null)
         {
             startAnimation();
         }
         else
         {
             boolean isAlive = buttonAnimator.continueIfAlive();
-            if(!isAlive)
+            if (!isAlive)
             {
                 startAnimation();
             }
@@ -73,28 +73,28 @@ public class StupidImageButton
         {
             animationState.set(0);
             int localState;
-            while( (localState = animationState.get()) != 2  || angle > 0 )
+            while ((localState = animationState.get()) != 2 || angle > 0)
             {
-                if(localState == 1)
+                if (localState == 1)
                 {
-                    double x = (360-angle)/360;
+                    double x = (360 - angle) / 360;
                     double change = Math.pow(x, 2) * 10 + 0.5;
                     angle += change;
                 }
-                else if(localState == 0)
+                else if (localState == 0)
                 {
                     //System.out.println("angle: " + angle + "\tstate: 0t");
                     angle += 2;
                 }
 
-                if(angle >= 360)
+                if (angle >= 360)
                 {
                     angle = 0;
                 }
 
                 Platform.runLater(() -> imageView.setRotate(angle));
 
-                if(angle == 0 && localState == 1)
+                if (angle == 0 && localState == 1)
                 {
                     animationState.set(2);
                     break;
@@ -103,12 +103,11 @@ public class StupidImageButton
                 try
                 {
                     Thread.sleep(10);
+                } catch (InterruptedException ignored)
+                {
                 }
-                catch (InterruptedException ignored) {}
             }
-            System.out.println("animation done");
         }
-
 
 
         public void cancel()

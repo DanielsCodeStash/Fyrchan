@@ -3,13 +3,10 @@ package view.joblist;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import model.DownerModel;
 import shared.JobListItem;
 import util.observable.CoolObservable;
@@ -55,23 +52,23 @@ public class JobListPanel
         HashMap<Integer, JobListItem> updatedItems = new HashMap<>();
 
         HashSet<Integer> allInputIndices = new HashSet<>();
-        for(JobListItem uitem : updatedList)
+        for (JobListItem uitem : updatedList)
         {
             allInputIndices.add(uitem.getId());
             JobListItem existingItem = idToItem.get(uitem.getId());
-            if(existingItem == null)
+            if (existingItem == null)
             {
                 newItems.add(uitem);
             }
-            else if(!existingItem.equals(uitem))
+            else if (!existingItem.equals(uitem))
             {
                 updatedItems.put(uitem.getId(), uitem);
             }
         }
 
-        for(JobListItem eitem : items)
+        for (JobListItem eitem : items)
         {
-            if(!allInputIndices.contains(eitem.getId()))
+            if (!allInputIndices.contains(eitem.getId()))
             {
                 deletedItems.add(eitem);
             }
@@ -80,12 +77,12 @@ public class JobListPanel
         Platform.runLater(() -> {
 
             // add
-            for(JobListItem ji : newItems)
+            for (JobListItem ji : newItems)
             {
                 idToItem.put(ji.getId(), ji.copy());
             }
 
-            if(!newItems.isEmpty())
+            if (!newItems.isEmpty())
             {
                 // a newly added item will automatically be selected
                 selectedJobItemId = newItems.get(0).getId();
@@ -94,16 +91,16 @@ public class JobListPanel
             }
 
             // remove
-            for(JobListItem ji : deletedItems)
+            for (JobListItem ji : deletedItems)
             {
                 idToItem.remove(ji.getId());
                 items.remove(ji);
             }
 
             // update
-            for(JobListItem eitem : items)
+            for (JobListItem eitem : items)
             {
-                if(updatedItems.containsKey(eitem.getId()))
+                if (updatedItems.containsKey(eitem.getId()))
                 {
                     JobListItem updatedItem = updatedItems.get(eitem.getId());
                     int itemIndex = items.indexOf(eitem);
@@ -111,7 +108,7 @@ public class JobListPanel
                     JobItemCell cellToUpdate = itemIdToJobItemCell.get(updatedItem.getId());
 
                     // see itemIdToJobItemCell definition-comment
-                    if(cellToUpdate != null)
+                    if (cellToUpdate != null)
                     {
                         itemToUpdate.setStatus(updatedItem.getStatus());
                         itemIdToJobItemCell.get(updatedItem.getId()).updateItem(updatedItem, false);

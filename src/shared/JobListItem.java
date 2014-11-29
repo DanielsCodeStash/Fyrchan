@@ -85,9 +85,9 @@ public class JobListItem
     public JobListItem copy()
     {
         return new JobListItem()
-                    .setId(id)
-                    .setDescription(description)
-                    .setStatus(status);
+                .setId(id)
+                .setDescription(description)
+                .setStatus(status);
     }
 
 

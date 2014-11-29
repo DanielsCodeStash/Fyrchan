@@ -6,7 +6,6 @@ import model.parsing.ThreadParser;
 import org.jsoup.HttpStatusException;
 import org.jsoup.nodes.Document;
 import shared.JobDescription;
-import shared.JobStats;
 import shared.JobStatus;
 import util.ConHandler;
 import util.CoolThreadPool;
@@ -36,7 +35,7 @@ public class ThreadDowner implements Runnable
     }
 
 
-    private void download() throws IOException, InterruptedException
+    private void download() throws InterruptedException
     {
         ArrayList<String> fileUrls = getFileUrls(jobDescription.getThreadUrl());
         if (fileUrls == null)
@@ -151,7 +150,7 @@ public class ThreadDowner implements Runnable
             download();
             System.out.println("Thread Downer thread shutting down.");
 
-        } catch (IOException | InterruptedException e)
+        } catch (InterruptedException e)
         {
             e.printStackTrace();
         }

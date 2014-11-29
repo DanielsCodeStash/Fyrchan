@@ -1,6 +1,5 @@
 package controller;
 
-import model.DownerModel;
 import shared.JobListItem;
 import view.joblist.JobListPanel;
 
@@ -31,7 +30,6 @@ public class JobListController
         controllerManager.getDownerModel().setNewActiveThreadUrl(item.getThreadUrl());
 
     }
-
 
 
 }

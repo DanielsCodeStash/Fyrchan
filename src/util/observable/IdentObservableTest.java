@@ -6,6 +6,7 @@ public class IdentObservableTest
     public static class IceCreamTruck
     {
         public String truckColor;
+
         public IceCreamTruck(String color)
         {
             truckColor = color;
@@ -20,7 +21,7 @@ public class IdentObservableTest
         IdentObservable<IceCreamTruck, String> streetWatch = new IdentObservable<>();
 
         // se to it that children scream when a truck approaches
-        streetWatch.addObserver( (truck, sound) -> System.out.println("I hear a " + truck.truckColor + " truck go " + sound));
+        streetWatch.addObserver((truck, sound) -> System.out.println("I hear a " + truck.truckColor + " truck go " + sound));
 
         // TRUCKS DRIVING BY
         streetWatch.notifyObservers(blueTruck, "DUDUDU");

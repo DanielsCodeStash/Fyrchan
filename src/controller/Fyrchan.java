@@ -1,25 +1,19 @@
 package controller;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import model.*;
+import model.DownerModel;
 import util.ResourceUtil;
-import view.joblist.JobListPanel;
 import view.JobPanel;
 import view.StatsPanel;
-
-import java.io.InputStream;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import view.joblist.JobListPanel;
 
 
 public class Fyrchan extends Application
@@ -140,13 +134,4 @@ public class Fyrchan extends Application
         return primaryStage;
     }
 
-    public StatsPanel getStatsPanel()
-    {
-        return statsPanel;
-    }
-
-    public JobPanel getJobPanel()
-    {
-        return jobPanel;
-    }
 }
