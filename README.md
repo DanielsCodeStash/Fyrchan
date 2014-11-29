@@ -6,4 +6,4 @@ Requires [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.
 
 <img src=http://i.imgur.com/MxumFEe.png>
 
-To compile or run from source you will need the lib [jsoup](http://jsoup.org/) and JavaFX 8 (included in Java 8 JDK).
+To compile or run from source you will need the lib [jsoup](www.jsoup.org/packages/jsoup-1.8.1-javadoc.jar) and JavaFX 8 (included in Java 8 JDK).
