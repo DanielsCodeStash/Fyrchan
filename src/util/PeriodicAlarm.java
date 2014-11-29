@@ -21,7 +21,6 @@ public class PeriodicAlarm
                 numActivations++;
             }
 
-
             Thread.sleep(35);
         }
 
