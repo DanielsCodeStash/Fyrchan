@@ -12,7 +12,6 @@ import java.text.DecimalFormat;
 public class StatsHandler
 {
 
-
     private IdentObservable<StatsHandler, JobStatus> statusChange = new IdentObservable<>();
     private IdentObservable<StatsHandler, JobStats> statsChange = new IdentObservable<>();
 
@@ -22,11 +21,13 @@ public class StatsHandler
     private int filesDownloaded = 0;
     private JobStatus status;
 
+    private long totalTimeSpentDownloading = 0;
+
     private DateTime timeStarted;
     private PeriodicAlarm autoUpdateAlarm = new PeriodicAlarm(1000);
 
-
     private DecimalFormat df;
+
 
     public StatsHandler()
     {
@@ -38,6 +39,13 @@ public class StatsHandler
     public JobStatus getJobStatus()
     {
         return status;
+    }
+
+    public void performBeforeUpdateReset()
+    {
+        numFilesExisting = 0;
+        filesToDownload = 0;
+        filesDownloaded = 0;
     }
 
     public synchronized void notifyDownloadStart(String url)
@@ -72,10 +80,15 @@ public class StatsHandler
     public synchronized void notifyNewStatus(JobStatus newStatus)
     {
         setNewStatus(newStatus);
+        sendStatsMessage();
     }
 
     public synchronized void notifyAllDownloadsDone()
     {
+        if(filesDownloaded != numFilesExisting)
+        {
+            totalTimeSpentDownloading += new DateTime().getMillis() - timeStarted.getMillis();
+        }
 
         if (status == JobStatus.ABORTING)
         {
@@ -86,6 +99,7 @@ public class StatsHandler
             setNewStatus(JobStatus.DONE);
         }
         sendStatsMessage();
+
     }
 
     public synchronized void notifyFileExists(String url)
@@ -108,7 +122,7 @@ public class StatsHandler
 
             files = filesDownloaded + "";
 
-            boolean showRemaining = status != JobStatus.DONE;
+            boolean showRemaining = status != JobStatus.DONE && status == JobStatus.DOWNLOADING;
             boolean showExisting = numFilesExisting != 0;
             boolean showParenthesis = showRemaining || showExisting;
 
@@ -126,7 +140,7 @@ public class StatsHandler
                         files += ", ";
                     }
 
-                    files += numFilesExisting + " existing";
+                    files += numFilesExisting + " existed";
                 }
                 files += ")";
             }
@@ -134,7 +148,7 @@ public class StatsHandler
 
             doneNum = (double) filesDownloaded / filesToDownload;
 
-            long timeElapsed = (new DateTime().getMillis() - timeStarted.getMillis());
+            long timeElapsed = getTimeSpentDownloading();
             long timePerFile = timeElapsed / filesDownloaded;
             long timeRemaining = timePerFile * (filesToDownload - filesDownloaded);
             time = ((int) timeRemaining / 1000) + "s \t(" + ((int) timeElapsed / 1000) + "s elapsed)";
@@ -213,6 +227,16 @@ public class StatsHandler
             this.status = newStatus;
             statusChange.notifyObservers(this, newStatus);
         }
+    }
+
+    private long getTimeSpentDownloading()
+    {
+        long time = totalTimeSpentDownloading;
+        if(status == JobStatus.DOWNLOADING)
+        {
+            time += new DateTime().getMillis() - timeStarted.getMillis();
+        }
+        return time;
     }
 
 }

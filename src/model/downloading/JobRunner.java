@@ -14,6 +14,7 @@ public class JobRunner
     public AtomicBoolean jobRunning;
     private StatsHandler statsHandler;
     private JobDescription jobDescription;
+    private boolean firstRun = true;
 
     private boolean autoUpdate;
     private Long lastFinished = null;
@@ -29,6 +30,11 @@ public class JobRunner
 
     public void startDownloads()
     {
+        if(!firstRun)
+        {
+            statsHandler.performBeforeUpdateReset();
+        }
+
         jobRunning.set(true);
         statsHandler.notifyStartingUp();
         ThreadDowner threadDowner = new ThreadDowner(jobDescription, statsHandler, this::onDownloadDone, jobRunning);
@@ -41,7 +47,6 @@ public class JobRunner
     public void onDownloadDone()
     {
         jobRunning.set(false);
-        System.out.println("Thread download done.");
 
         JobStatus s = statsHandler.getJobStatus();
         if(s == JobStatus.HTTP404 || s == JobStatus.INPUT_ERROR || s == JobStatus.ERROR)
@@ -54,6 +59,7 @@ public class JobRunner
             lastFinished = new Date().getTime();
             statsHandler.notifyNewStatus(JobStatus.SLEEPING);
         }
+        firstRun = false;
     }
 
     public void cancelDownload()

@@ -73,13 +73,12 @@ public class StupidImageButton
         {
             animationState.set(0);
             int localState;
-            while( (localState = animationState.get()) != 2  || angle > 0)
+            while( (localState = animationState.get()) != 2  || angle > 0 )
             {
                 if(localState == 1)
                 {
                     double x = (360-angle)/360;
                     double change = Math.pow(x, 2) * 10 + 0.5;
-                    //System.out.println("angle: " + angle + ",\tx: " + x + ",\tchange: " + change + "\tstate: " + localState);
                     angle += change;
                 }
                 else if(localState == 0)
@@ -92,6 +91,7 @@ public class StupidImageButton
                 {
                     angle = 0;
                 }
+
                 Platform.runLater(() -> imageView.setRotate(angle));
 
                 if(angle == 0 && localState == 1)
@@ -103,8 +103,10 @@ public class StupidImageButton
                 try
                 {
                     Thread.sleep(10);
-                } catch (InterruptedException ignored) {}
+                }
+                catch (InterruptedException ignored) {}
             }
+            System.out.println("animation done");
         }
 
 

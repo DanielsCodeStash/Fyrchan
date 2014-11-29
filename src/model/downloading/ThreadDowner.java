@@ -53,7 +53,6 @@ public class ThreadDowner implements Runnable
 
         int numFiles = fileUrls.size();
 
-        System.out.println("Downloading " + numFiles + " files.");
         statsHandler.setFilesToDownload(numFiles);
 
         if (numFiles != fileUrls.size())
@@ -150,6 +149,7 @@ public class ThreadDowner implements Runnable
         {
             Thread.currentThread().setName("ThreadDowner");
             download();
+            System.out.println("Thread Downer thread shutting down.");
 
         } catch (IOException | InterruptedException e)
         {

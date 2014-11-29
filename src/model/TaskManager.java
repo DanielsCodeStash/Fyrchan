@@ -110,8 +110,6 @@ public class TaskManager implements Runnable
         job.getStatsHandler().addStatusChangeObs(this::onTaskStatusChange);
         setUpdatePending();
 
-        System.out.println("adding " + job.toString());
-
     }
 
 
@@ -179,6 +177,7 @@ public class TaskManager implements Runnable
         {
             Thread.currentThread().setName("TaskManager");
             taskLoop();
+            System.out.println("Shutting down Task Manager");
 
         } catch (InterruptedException e)
         {
