@@ -1,6 +1,5 @@
 package model;
 
-import org.joda.time.DateTime;
 import shared.JobStats;
 import shared.JobStatus;
 import util.PeriodicAlarm;
@@ -8,6 +7,7 @@ import util.observable.IdentObservable;
 import util.observable.IdentObserver;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 
 public class StatsHandler
 {
@@ -23,7 +23,7 @@ public class StatsHandler
 
     private long totalTimeSpentDownloading = 0;
 
-    private DateTime timeStarted;
+    private long timeStarted;
     private PeriodicAlarm autoUpdateAlarm = new PeriodicAlarm(1000);
 
     private DecimalFormat df;
@@ -87,7 +87,7 @@ public class StatsHandler
     {
         if(filesDownloaded != numFilesExisting)
         {
-            totalTimeSpentDownloading += new DateTime().getMillis() - timeStarted.getMillis();
+            totalTimeSpentDownloading += new Date().getTime() - timeStarted;
         }
 
         if (status == JobStatus.ABORTING)
@@ -206,7 +206,7 @@ public class StatsHandler
 
     public synchronized void startTimeCounter()
     {
-        timeStarted = new DateTime();
+        timeStarted = new Date().getTime();
     }
 
 
@@ -234,7 +234,7 @@ public class StatsHandler
         long time = totalTimeSpentDownloading;
         if(status == JobStatus.DOWNLOADING)
         {
-            time += new DateTime().getMillis() - timeStarted.getMillis();
+            time += new Date().getTime() - timeStarted;
         }
         return time;
     }

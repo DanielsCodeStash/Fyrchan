@@ -1,7 +1,5 @@
 package util;
 
-import org.joda.time.DateTime;
-
 import java.util.Date;
 
 public class PeriodicAlarm
@@ -21,7 +19,6 @@ public class PeriodicAlarm
             {
                 alarm.reset();
                 numActivations++;
-                System.out.println("Activated @ " + new DateTime().toString());
             }
 
 
